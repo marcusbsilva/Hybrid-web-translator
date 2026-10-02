@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Safe Page Translator - Hybrid Learning",
+  "name": "Hybrid-web-translator",
   "version": "2.4.0",
   "description": "Low-CPU local Chinese/Vietnamese translator with optional minimal Google Cloud fallback that learns translations locally.",
   "permissions": [
@@ -18,7 +18,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Safe Page Translator"
+    "default_title": "Hybrid-web-translator"
   },
   "content_scripts": [
     {

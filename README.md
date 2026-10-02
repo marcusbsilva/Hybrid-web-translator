@@ -1,10 +1,16 @@
-# Safe Page Translator
+# Hybrid-web-translator
 
 A low-CPU Chrome extension that translates **Chinese and Vietnamese web pages into English while preserving the original DOM and page interactivity**.
 
-Safe Page Translator was created for pages where full-page machine translation can interfere with layout, controls, event handlers, or dynamically rendered content. Instead of replacing page HTML, the extension translates text nodes and a small set of safe text attributes in place.
+Hybrid-web-translator was created for pages where full-page machine translation can interfere with layout, controls, event handlers, or dynamically rendered content. Instead of replacing page HTML, the extension translates text nodes and a small set of safe text attributes in place.
 
 Version **2.4** uses a hybrid architecture: a fast local dictionary/segmentation engine handles translation first, while an optional Google Cloud Translation fallback is used only for unresolved or low-confidence text. Successful fallback translations are learned locally and reused on later visits.
+
+### Hybrid mode settings
+
+![Hybrid-web-translator hybrid mode settings](docs/images/hybrid-settings.png)
+
+The popup provides direct control over local translation, the optional Google Cloud Translation API fallback, the daily API character budget, and the learned local dictionary. An API key is **not required** for normal offline/local translation; it is only required when the optional hybrid fallback is enabled.
 
 ## Features
 
@@ -29,7 +35,7 @@ Version **2.4** uses a hybrid architecture: a fast local dictionary/segmentation
 
 Conventional page translators may rebuild or wrap page content. On older forums, game-resource sites, SPAs, and heavily scripted pages, this can occasionally make controls difficult to use or alter the layout.
 
-Safe Page Translator follows a narrower strategy:
+Hybrid-web-translator follows a narrower strategy:
 
 ```text
 Page DOM
@@ -100,7 +106,7 @@ The local Chinese engine uses:
 7. Local dictionary lookup
 8. English reconstruction and spacing cleanup
 
-This design is inspired by the general segmentation strategy documented by **Jieba**, which uses a prefix dictionary, DAG generation, word frequencies and dynamic programming for maximum-probability segmentation. Safe Page Translator contains its own JavaScript implementation rather than embedding Jieba itself.
+This design is inspired by the general segmentation strategy documented by **Jieba**, which uses a prefix dictionary, DAG generation, word frequencies and dynamic programming for maximum-probability segmentation. Hybrid-web-translator contains its own JavaScript implementation rather than embedding Jieba itself.
 
 ### Vietnamese
 
@@ -128,7 +134,7 @@ Use **Export learned dictionary** from the popup to export learned pairs as JSON
 ## Project structure
 
 ```text
-safe-page-translator/
+hybrid-web-translator/
 ├── manifest.json
 ├── content.js
 ├── service_worker.js
@@ -197,7 +203,7 @@ For a public Chrome Web Store release, consider narrowing host access or moving 
 
 ## Credits and references
 
-Safe Page Translator's implementation was informed by the following projects, datasets and documentation. Unless explicitly stated, they are **references/inspirations and are not vendored dependencies** in this repository.
+Hybrid-web-translator's implementation was informed by the following projects, datasets and documentation. Unless explicitly stated, they are **references/inspirations and are not vendored dependencies** in this repository.
 
 - **CC-CEDICT** — community-maintained Chinese–English dictionary. The dictionary data is distributed under **CC BY-SA 4.0**. The included build tool can generate an optional dictionary from CC-CEDICT data.
 - **Jieba (`fxsjy/jieba`)** — reference for efficient Chinese segmentation concepts: prefix dictionary, DAG construction, word-frequency scoring, dynamic programming, and custom dictionaries. Jieba is MIT-licensed. This project uses an independently written JavaScript implementation of those general ideas.
@@ -210,7 +216,7 @@ See `THIRD_PARTY_NOTICES.md` for licensing details and redistribution notes.
 
 ## License
 
-The **software source code written for Safe Page Translator** is licensed under the MIT License. See `LICENSE`.
+The **software source code written for Hybrid-web-translator** is licensed under the MIT License. See `LICENSE`.
 
 Dictionary datasets can have separate licenses. In particular, any dictionary generated from CC-CEDICT remains subject to **CC BY-SA 4.0** and is not relicensed under MIT merely by being distributed with this project. See `THIRD_PARTY_NOTICES.md`.
 

@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener((msg,_sender,send)=>{
    }catch(e){send({ok:false,error:String(e?.message||e)})}})();return true;
  }
  if(msg?.type==='SPT_EXPORT_LEARNED'){
-   (async()=>{const s=await cfg();const blob='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify({version:1,exportedAt:new Date().toISOString(),entries:s.learnedExact||{}},null,2));await chrome.downloads.download({url:blob,filename:'safe-page-translator-learned-dictionary.json',saveAs:true});send({ok:true})})().catch(e=>send({ok:false,error:String(e)}));return true;
+   (async()=>{const s=await cfg();const blob='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify({version:1,exportedAt:new Date().toISOString(),entries:s.learnedExact||{}},null,2));await chrome.downloads.download({url:blob,filename:'hybrid-web-translator-learned-dictionary.json',saveAs:true});send({ok:true})})().catch(e=>send({ok:false,error:String(e)}));return true;
  }
  if(msg?.type==='SPT_CLEAR_LEARNED'){chrome.storage.local.set({learnedExact:{},learnedMeta:{order:[],charsToday:0,day:today()}}).then(()=>send({ok:true}));return true}
 });

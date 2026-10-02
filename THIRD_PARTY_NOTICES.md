@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-Safe Page Translator is MIT-licensed software, but external datasets and reference projects may have their own licenses.
+Hybrid-web-translator is MIT-licensed software, but external datasets and reference projects may have their own licenses.
 
 ## CC-CEDICT
 
@@ -11,7 +11,7 @@ Safe Page Translator is MIT-licensed software, but external datasets and referen
 
 `tools/build_dictionary.py` is able to transform a CC-CEDICT dump into a JavaScript dictionary. Any output containing adapted CC-CEDICT dictionary data remains subject to CC BY-SA 4.0. Preserve attribution, identify modifications where appropriate, provide the license, and comply with ShareAlike when redistributing that data.
 
-The MIT license in the repository root applies to Safe Page Translator's original software code; it does not override CC-CEDICT's license for CC-CEDICT-derived data.
+The MIT license in the repository root applies to Hybrid-web-translator's original software code; it does not override CC-CEDICT's license for CC-CEDICT-derived data.
 
 ## Jieba
 
@@ -19,7 +19,7 @@ The MIT license in the repository root applies to Safe Page Translator's origina
 **Repository:** https://github.com/fxsjy/jieba  
 **License:** MIT
 
-Safe Page Translator's Chinese segmenter is independently implemented in JavaScript, but its architecture is informed by publicly documented Jieba concepts including prefix dictionaries, DAG candidate generation, word-frequency scoring, dynamic programming, and custom dictionary support.
+Hybrid-web-translator's Chinese segmenter is independently implemented in JavaScript, but its architecture is informed by publicly documented Jieba concepts including prefix dictionaries, DAG candidate generation, word-frequency scoring, dynamic programming, and custom dictionary support.
 
 No Jieba Python source code is required at runtime by this extension.
 
