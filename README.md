@@ -4,7 +4,7 @@ A low-CPU Chrome extension that translates **Chinese and Vietnamese web pages in
 
 Hybrid-web-translator was created for pages where full-page machine translation can interfere with layout, controls, event handlers, or dynamically rendered content. Instead of replacing page HTML, the extension translates text nodes and a small set of safe text attributes in place.
 
-Version **2.4** uses a hybrid architecture: a fast local dictionary/segmentation engine handles translation first, while an optional Google Cloud Translation fallback is used only for unresolved or low-confidence text. Successful fallback translations are learned locally and reused on later visits.
+Uses a hybrid architecture: a fast local dictionary/segmentation engine handles translation first, while an optional Google Cloud Translation fallback is used only for unresolved or low-confidence text. Successful fallback translations are learned locally and reused on later visits.
 
 ### Hybrid mode settings
 
