@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for improving Safe Page Translator.
+Thank you for improving Hybrid-web-translator.
 
 ## Guidelines
 
