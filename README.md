@@ -24,7 +24,7 @@ It uses local language dictionaries first and can optionally call an external tr
 
 ## Interface
 
-Settings are saved automatically when changed. There is no separate Save button.
+Settings are saved automatically when changed.
 
 ![Hybrid-web-translator settings](docs/images/hybrid-settings-v3.3.png)
 
