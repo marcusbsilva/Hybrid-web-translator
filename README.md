@@ -24,11 +24,10 @@ It uses local language dictionaries first and can optionally call an external tr
 
 ## Interface
 
-Settings are saved automatically when changed.
+Settings are saved automatically when changed. The popup includes controls for translation, hybrid learning, fallback provider configuration, the daily fallback character budget, and learned-dictionary export.
 
 ![Hybrid-web-translator settings](docs/images/hybrid-settings-v3.3.png)
 
-The popup includes controls for translation, hybrid learning, fallback provider configuration, the daily fallback character budget, and learned-dictionary export.
 
 ## Translator status
 
