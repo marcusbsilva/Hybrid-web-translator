@@ -223,7 +223,6 @@ Dictionary datasets can have separate licenses. In particular, any dictionary ge
 
 Hybrid-web-translator uses a compact popup designed to keep the local translator and optional hybrid learning controls easy to understand.
 
-![Hybrid-web-translator settings](docs/images/hybrid-settings-v3.3.png)
 
 The main controls are:
 
@@ -256,6 +255,8 @@ Local dictionaries are always attempted first. Hybrid mode sends only unresolved
 
 ## Language-based dictionaries
 
+The earlier website-specific/module split was removed. The current design uses exactly one maintained translation dictionary per source language; `registry.js` only initializes the language dictionary objects and is not a vocabulary module.
+
 Dictionary maintenance is independent from the translation engine and is organized strictly by language:
 
 ```text
@@ -265,7 +266,7 @@ dictionaries/
 └── vi.js
 ```
 
-There are no website-specific dictionaries. Vocabulary collected from Aigei, GameCBG, CLBGamesVN, Forumotion, Discuz, vBulletin, or another supported website is merged into the appropriate language dictionary.
+There are no website-specific dictionaries. Vocabulary collected from supported public web pages is merged into the appropriate language dictionary.
 
 This means a Chinese translation learned from one website is available on every website where the same text appears.
 
@@ -344,7 +345,7 @@ python -m playwright install chromium
 ```
 
 ```bash
-bash tools/crawl.sh --render-js aigei.com --max-pages 5000 --delay 1.5
+bash tools/crawl.sh --render-js example.com --max-pages 5000 --delay 1.5
 ```
 
 The crawler is a development tool only. It is not executed by the Chrome extension and Python is not required for normal extension use.
@@ -379,34 +380,9 @@ Version 3.0 removes the manual Save and Clear learned controls. Every setting is
 
 ## v2.8 — Multi-platform comments & fallback providers
 
-Version 2.8 broadens dynamic post/comment scanning beyond Discuz to common structures used by vBulletin, phpBB/Forumotion, XenForo, Flarum, NodeBB, WordPress comments and generic post containers. Content scripts also run in frames, allowing comments embedded in eligible frames to be translated without replacing page HTML.
+Version 2.Content scripts also run in frames, allowing comments embedded in eligible frames to be translated without replacing page HTML.
 
 The hybrid-learning toggle now applies immediately: changing it updates `chrome.storage.local` and notifies the active content script instead of waiting for a page reload. The provider list now supports Lingva, Google Cloud Translation, LibreTranslate (including self-hosted instances), and DeepL API. Successful fallback translations continue to be stored in the learned local dictionary.
-
-The bundled Chinese vocabulary was expanded for Aigei-style game asset/source-code pages, while the Vietnamese vocabulary was expanded for CLBGamesVN/Forumotion/vBulletin forum navigation, posts and development terminology.
-
-
-## Modular dictionaries (v3.3)
-
-Dictionaries are now loaded independently from the translation engine. The engine lives in `content.js`; dictionary modules live under `dictionaries/zh/` and `dictionaries/vi/`. A dictionary update can therefore be distributed without replacing the engine.
-
-Current modules:
-
-```text
-dictionaries/
-  registry.js
-  zh/core.js
-  vi/core.js
-  vi/forumvi.js
-```
-
-To update Forumotion/CLBGAMESVN vocabulary, replace only `dictionaries/vi/forumvi.js`, reload the extension in `chrome://extensions`, then reload the page.
-
-
-## Dictionary maintenance (v3.3)
-
-Dictionaries are language-based only: `dictionaries/zh.js` and `dictionaries/vi.js`. Website-specific dictionary modules are no longer used. Updating vocabulary does not require changing the translation engine.
-
 
 ## Corpus crawler
 
@@ -440,7 +416,7 @@ python -m playwright install chromium
 ```
 
 ```bat
-tools\crawl.bat --render-js aigei.com --max-pages 5000 --delay 1.5
+tools\crawl.bat --render-js example.com --max-pages 5000 --delay 1.5
 ```
 
 Crawler output remains development data and is not used by the Chrome extension at runtime.
