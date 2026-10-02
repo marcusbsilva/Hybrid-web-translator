@@ -111,8 +111,6 @@ This allows newly loaded interface elements, posts, comments, and other dynamic 
 4. Click **Load unpacked**.
 5. Select the project directory containing `manifest.json`.
 
-For normal end-user installation without Developer mode, distribute the extension through the Chrome Web Store.
-
 ## Project structure
 
 ```text
