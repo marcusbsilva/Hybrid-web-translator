@@ -1,0 +1,9 @@
+const $=id=>document.getElementById(id), enabled=$('enabled'),hybrid=$('hybrid'),key=$('key'),budget=$('budget'),stats=$('stats');
+async function tab(){return (await chrome.tabs.query({active:true,currentWindow:true}))[0]}
+async function load(){const r=await chrome.storage.local.get({enabled:true,hybridEnabled:false,googleApiKey:'',dailyCharBudget:15000,learnedExact:{},learnedMeta:{}});enabled.checked=r.enabled;hybrid.checked=r.hybridEnabled;key.value=r.googleApiKey||'';budget.value=r.dailyCharBudget||15000;await refresh()}
+async function refresh(){try{const t=await tab(),r=await chrome.tabs.sendMessage(t.id,{type:'SPT_STATS'});stats.textContent=`${r.engine}\nLocal cache: ${r.cache} | Learned: ${r.learned}\nZH: ${r.zh} | VI: ${r.vi} | Google today: ${r.apiCharsToday} chars`;}catch{const r=await chrome.storage.local.get({learnedExact:{},learnedMeta:{}});stats.textContent=`Learned: ${Object.keys(r.learnedExact||{}).length} | Google today: ${r.learnedMeta?.charsToday||0} chars`}}
+$('save').onclick=async()=>{await chrome.storage.local.set({enabled:enabled.checked,hybridEnabled:hybrid.checked,googleApiKey:key.value.trim(),dailyCharBudget:Math.max(1000,Number(budget.value)||15000)});try{const t=await tab();await chrome.tabs.sendMessage(t.id,{type:'SPT_RELOAD_DICT'})}catch{}await refresh()};
+enabled.onchange=async()=>{await chrome.storage.local.set({enabled:enabled.checked});try{const t=await tab();await chrome.tabs.sendMessage(t.id,{type:'SPT_SET',enabled:enabled.checked})}catch{}await refresh()};
+$('export').onclick=async()=>{const r=await chrome.runtime.sendMessage({type:'SPT_EXPORT_LEARNED'});if(!r?.ok)alert(r?.error||'Export failed')};
+$('clear').onclick=async()=>{if(!confirm('Clear all translations learned from Google?'))return;await chrome.runtime.sendMessage({type:'SPT_CLEAR_LEARNED'});try{const t=await tab();await chrome.tabs.sendMessage(t.id,{type:'SPT_RELOAD_DICT'})}catch{}await refresh()};
+load();

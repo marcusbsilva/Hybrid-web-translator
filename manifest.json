@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Safe Page Translator - Hybrid Learning",
+  "version": "2.4.0",
+  "description": "Low-CPU local Chinese/Vietnamese translator with optional minimal Google Cloud fallback that learns translations locally.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "unlimitedStorage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://translation.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Safe Page Translator"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "dictionaries/zh.js",
+        "dictionaries/vi.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "author": "Marcus Silva"
+}
