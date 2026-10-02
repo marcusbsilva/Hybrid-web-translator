@@ -3,8 +3,8 @@
 const BASE_ZH=globalThis.SPT_ZH||{}, BASE_VI=globalThis.SPT_VI||{};
 let ZH={...BASE_ZH}, VI={...BASE_VI}, LEARNED={};
 let hybridEnabled=false, googleQueue=new Map(), googleTimer=0, apiCharsToday=0;
-const SKIP=new Set(['SCRIPT','STYLE','NOSCRIPT','CODE','PRE','TEXTAREA','CANVAS','SVG','MATH','IFRAME','SELECT','OPTION']);
-const originals=new WeakMap(), done=new WeakSet(), cache=new Map();
+const SKIP=new Set(['SCRIPT','STYLE','NOSCRIPT','CODE','PRE','TEXTAREA','CANVAS','SVG','MATH','SELECT','OPTION']);
+const originals=new WeakMap(), done=new WeakSet(), lastApplied=new WeakMap(), cache=new Map();
 let enabled=true, observer=null, flushTimer=0, initialized=false;
 const pending=new Set();
 const HAN=/\p{Script=Han}/u, HAN_RUN=/[\p{Script=Han}]+/gu;
@@ -81,37 +81,63 @@ function translateVi(s){let out=s;for(const k of viKeys)out=out.replace(new RegE
 function lang(s){if(HAN.test(s))return'zh';if(VI_MARK.test(s))return'vi';return null}
 function translate(s){const lead=s.match(/^\s*/)?.[0]||'',trail=s.match(/\s*$/)?.[0]||'',body=s.slice(lead.length,s.length-trail.length);if(!body)return s;if(LEARNED[body])return lead+LEARNED[body]+trail;if(cache.has(body))return lead+cache.get(body)+trail;const l=lang(body);if(!l)return s;const t=l==='zh'?translateZhMixed(body):translateVi(body);cache.set(body,t);return lead+t+trail}
 function bodyOf(s){const lead=s.match(/^\s*/)?.[0]||'',trail=s.match(/\s*$/)?.[0]||'';return s.slice(lead.length,s.length-trail.length)}
-function needsGoogle(src,local){
- if(!hybridEnabled||LEARNED[src]||src.length<4||src.length>1200)return false;
+function needsFallback(src,local){
+ if(!hybridEnabled||LEARNED[src]||src.length<2||src.length>1200)return false;
  const han=(src.match(/[\p{Script=Han}]/gu)||[]).length, residual=(local.match(/[\p{Script=Han}]/gu)||[]).length;
  if(han){const coverage=1-(residual/han);if(residual>0||coverage<.98)return true;if(han>=10&&/[A-Za-z0-9#.+]\s*[\p{Script=Han}]|[\p{Script=Han}]\s*[A-Za-z0-9#.+]/u.test(local))return true;if(han>=18&&local.length<Math.max(8,src.length*.35))return true}
- if(lang(src)==='vi'&&VI_MARK.test(src)&&local===src)return true;
+ if(lang(src)==='vi'&&VI_MARK.test(src)&&(local===src||VI_MARK.test(local)))return true;
  return false;
 }
 function queueGoogle(node,src,local){
- if(!needsGoogle(src,local))return;
+ if(!needsFallback(src,local))return;
  let q=googleQueue.get(src);if(!q){q={text:src,lang:lang(src),nodes:new Set()};googleQueue.set(src,q)}q.nodes.add(node);
  if(!googleTimer)googleTimer=setTimeout(flushGoogle,350);
 }
 async function flushGoogle(){
  googleTimer=0;if(!hybridEnabled||!googleQueue.size)return;
  const batch=[...googleQueue.values()].slice(0,20);for(const x of batch)googleQueue.delete(x.text);
- try{const r=await chrome.runtime.sendMessage({type:'SPT_GOOGLE_BATCH',items:batch.map(x=>({text:x.text,lang:x.lang}))});if(r?.ok){apiCharsToday=r.charsToday||apiCharsToday;batch.forEach((x,i)=>{const t=r.translations?.[i];if(!t)return;LEARNED[x.text]=t;cache.set(x.text,t);for(const n of x.nodes){if(!n.isConnected)continue;const orig=originals.get(n);if(orig&&bodyOf(orig)===x.text){const lead=orig.match(/^\s*/)?.[0]||'',trail=orig.match(/\s*$/)?.[0]||'';n.nodeValue=lead+t+trail}}})}}
+ try{const r=await chrome.runtime.sendMessage({type:'SPT_HYBRID_BATCH',items:batch.map(x=>({text:x.text,lang:x.lang}))});if(r?.ok){apiCharsToday=r.charsToday||apiCharsToday;batch.forEach((x,i)=>{const t=r.translations?.[i];if(!t)return;LEARNED[x.text]=t;cache.set(x.text,t);for(const n of x.nodes){if(!n.isConnected)continue;const orig=originals.get(n);if(orig&&bodyOf(orig)===x.text){const lead=orig.match(/^\s*/)?.[0]||'',trail=orig.match(/\s*$/)?.[0]||'';const applied=lead+t+trail;lastApplied.set(n,applied);n.nodeValue=applied}}})}}
  catch{}
  if(googleQueue.size&&!googleTimer)googleTimer=setTimeout(flushGoogle,600);
 }
 function blocked(n){const p=n.parentElement;if(!p)return true;return SKIP.has(p.tagName)||p.isContentEditable||!!p.closest('script,style,noscript,code,pre,textarea,canvas,svg,math,select,[contenteditable="true"]')}
-function textNode(n){if(!enabled||done.has(n)||blocked(n))return;const s=n.nodeValue;if(!s||!lang(s))return;const t=translate(s);if(t!==s){originals.set(n,s);done.add(n);n.nodeValue=t;queueGoogle(n,bodyOf(s),bodyOf(t))}else{done.add(n);queueGoogle(n,bodyOf(s),bodyOf(t))}}
+function textNode(n){if(!enabled||blocked(n))return;const s=n.nodeValue;if(!s)return;
+ // A framework/forum may reuse a Text node after we translated it. Only skip when
+ // the node still contains exactly the value that Hybrid-web-translator applied.
+ if(done.has(n)&&lastApplied.get(n)===s)return;
+ if(!lang(s)){done.add(n);lastApplied.set(n,s);return;}const t=translate(s);if(t!==s){originals.set(n,s);done.add(n);lastApplied.set(n,t);n.nodeValue=t;queueGoogle(n,bodyOf(s),bodyOf(t))}else{done.add(n);lastApplied.set(n,s);queueGoogle(n,bodyOf(s),bodyOf(t))}}
 function attrs(el){if(!(el instanceof Element)||SKIP.has(el.tagName)||el.isContentEditable)return;for(const a of ['title','placeholder','aria-label']){const v=el.getAttribute(a);if(!v||!lang(v))continue;let o={};try{o=JSON.parse(el.dataset.sptAttrs||'{}')}catch{}if(!(a in o))o[a]=v;el.dataset.sptAttrs=JSON.stringify(o);el.setAttribute(a,translate(v))}if(el instanceof HTMLInputElement&&['button','submit','reset'].includes(el.type)&&lang(el.value)){if(!el.dataset.sptValue)el.dataset.sptValue=el.value;el.value=translate(el.value)}}
 function collect(root,limit=Infinity){const jobs=[];if(!root)return jobs;if(root.nodeType===3){jobs.push(root);return jobs}if(root.nodeType!==1&&root.nodeType!==11)return jobs;const w=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT,{acceptNode(n){if(n.nodeType===1&&SKIP.has(n.tagName))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT}});let n=root.nodeType===1?root:w.nextNode();while(n&&jobs.length<limit){if(n.nodeType===3){if(n.nodeValue&&lang(n.nodeValue))jobs.push(n)}else attrs(n);n=w.nextNode()}return jobs}
 function runJobs(jobs,i=0){if(!enabled)return;const end=Math.min(i+220,jobs.length);for(;i<end;i++)textNode(jobs[i]);if(i<jobs.length){const cb=()=>runJobs(jobs,i);('requestIdleCallback'in window)?requestIdleCallback(cb,{timeout:100}):setTimeout(cb,0)}}
 function scan(root=document.body){if(root)runJobs(collect(root))}
 function flush(){flushTimer=0;if(!enabled||document.hidden)return;const roots=[...pending];pending.clear();const jobs=[];for(const r of roots)jobs.push(...collect(r,650));runJobs(jobs)}
 function schedule(n){pending.add(n);if(!flushTimer)flushTimer=setTimeout(flush,90)}
-function observe(){observer?.disconnect();observer=new MutationObserver(ms=>{if(!enabled||document.hidden)return;for(const m of ms){if(m.type==='childList')for(const n of m.addedNodes)schedule(n);else if(m.type==='characterData'&&!done.has(m.target))schedule(m.target)}});observer.observe(document.documentElement,{subtree:true,childList:true,characterData:true})}
+function scanPlatformContent(){
+ // Common post/comment containers: Discuz, vBulletin, phpBB/Forumotion,
+ // XenForo, Flarum, NodeBB, WordPress and generic comment systems.
+ const selectors=[
+  '#postlist','.plhin','.pcb','.t_f','.pct','.authi','.pi','.pob','.pgs','.pg',
+  '#posts','.postbit','.postcontainer','.postbody','.postcontent','.content','.userinfo','.postfoot',
+  '.post','.postbody','.post-content','.postprofile','.topic-actions','.pagination','.forabg','.forumbg',
+  '.message','.message-body','.message-content','.bbWrapper','.structItem','.block-body',
+  '.PostStream','.Post','.CommentPost','.PostsUserPage','.topic-post','.posts-list',
+  '.posts-list','.topic-body','.topic-item','.post-container','.comment','.comments','.comment-body','.comment-content',
+  '#comments','.commentlist','.comment-list','[id^="post_message_"]','[id^="postmessage_"]','[id^="pid"]',
+  '.j_l_post','.d_post_content','.core_reply_content','.l_post','.p_content',
+  '[data-post-id]','[data-comment-id]','article'
+ ];
+ const seen=new Set();for(const sel of selectors)for(const el of document.querySelectorAll(sel)){if(seen.has(el))continue;seen.add(el);runJobs(collect(el,1800));}
+}
+function scanDiscuzPosts(){scanPlatformContent()}
+let discuzRescanTimer=0;
+function scheduleDiscuzRescan(delay=250){clearTimeout(discuzRescanTimer);discuzRescanTimer=setTimeout(()=>{discuzRescanTimer=0;if(enabled&&!document.hidden)scanDiscuzPosts()},delay)}
+function observe(){observer?.disconnect();observer=new MutationObserver(ms=>{if(!enabled||document.hidden)return;for(const m of ms){if(m.type==='childList')for(const n of m.addedNodes)schedule(n);else if(m.type==='characterData'){if(lastApplied.get(m.target)!==m.target.nodeValue)schedule(m.target)}}});observer.observe(document.documentElement,{subtree:true,childList:true,characterData:true})}
 function restore(){observer?.disconnect();const w=document.createTreeWalker(document,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))if(originals.has(n)){n.nodeValue=originals.get(n);originals.delete(n);done.delete(n)}document.querySelectorAll('[data-spt-attrs]').forEach(el=>{try{for(const[k,v]of Object.entries(JSON.parse(el.dataset.sptAttrs)))el.setAttribute(k,v)}catch{}delete el.dataset.sptAttrs});document.querySelectorAll('[data-spt-value]').forEach(el=>{el.value=el.dataset.sptValue;delete el.dataset.sptValue});observe()}
-async function init(){if(initialized)return;initialized=true;const r=await chrome.storage.local.get({enabled:true,customZh:{},customVi:{},learnedExact:{},hybridEnabled:false,learnedMeta:{}});enabled=r.enabled;hybridEnabled=!!r.hybridEnabled;LEARNED=r.learnedExact||{};apiCharsToday=r.learnedMeta?.charsToday||0;ZH={...BASE_ZH,...(r.customZh||{})};VI={...BASE_VI,...(r.customVi||{})};rebuildIndexes();if(enabled)scan();observe()}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&enabled){if(pending.size)flush();else scan(document.body)}});
-chrome.runtime.onMessage.addListener((msg,_s,send)=>{if(msg.type==='SPT_SET'){enabled=!!msg.enabled;chrome.storage.local.set({enabled});if(enabled)scan();else restore();send({ok:true})}else if(msg.type==='SPT_STATS')send({cache:cache.size,enabled,zh:Object.keys(ZH).length,vi:Object.keys(VI).length,learned:Object.keys(LEARNED).length,hybridEnabled,apiCharsToday,engine:'Hybrid Local DAG/Viterbi 2.4'});else if(msg.type==='SPT_RELOAD_DICT'){initialized=false;cache.clear();init().then(()=>send({ok:true}));return true}return true});
+async function init(){if(initialized)return;initialized=true;const r=await chrome.storage.local.get({enabled:true,customZh:{},customVi:{},learnedExact:{},hybridEnabled:false,learnedMeta:{}});enabled=r.enabled;hybridEnabled=!!r.hybridEnabled;LEARNED=r.learnedExact||{};apiCharsToday=r.learnedMeta?.charsToday||0;ZH={...BASE_ZH,...(r.customZh||{})};VI={...BASE_VI,...(r.customVi||{})};rebuildIndexes();if(enabled){scan();scanDiscuzPosts();scheduleDiscuzRescan(700);scheduleDiscuzRescan(2200)}observe()}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&enabled){if(pending.size)flush();else{scan(document.body);scanDiscuzPosts()}}});
+// Discuz pagination/reply widgets can update posts without a full navigation.
+window.addEventListener('pageshow',()=>scheduleDiscuzRescan(300),{passive:true});
+document.addEventListener('click',e=>{if(e.target?.closest?.('.pg a,.pgt a,.fastre,.replyadd,.pagination a,.pageNav a,.button[href],a[href*=\"page=\"],a[href*=\"viewthread\"],a[href*=\"showthread\"],a[href*=\"topic\"]'))scheduleDiscuzRescan(700)},{passive:true});
+chrome.runtime.onMessage.addListener((msg,_s,send)=>{if(msg.type==='SPT_SET'){enabled=!!msg.enabled;chrome.storage.local.set({enabled});if(enabled)scan();else restore();send({ok:true})}else if(msg.type==='SPT_STATS')send({cache:cache.size,enabled,zh:Object.keys(ZH).length,vi:Object.keys(VI).length,learned:Object.keys(LEARNED).length,hybridEnabled,apiCharsToday,engine:'Hybrid Local DAG/Viterbi 3.1'});else if(msg.type==='SPT_RELOAD_DICT'||msg.type==='SPT_CONFIG_CHANGED'){chrome.storage.local.get({hybridEnabled:false,learnedExact:{},learnedMeta:{}}).then(r=>{hybridEnabled=!!r.hybridEnabled;LEARNED=r.learnedExact||{};apiCharsToday=r.learnedMeta?.charsToday||0;cache.clear();if(enabled){scan(document.body);scanPlatformContent()}send({ok:true})});return true}return true});
 init();
 })();

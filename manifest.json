@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Hybrid-web-translator",
-  "version": "2.4.0",
-  "description": "Low-CPU local Chinese/Vietnamese translator with optional minimal Google Cloud fallback that learns translations locally.",
+  "version": "3.3.0",
+  "description": "Low-CPU local Chinese/Vietnamese translator with independent language dictionaries and optional hybrid learning.",
   "permissions": [
     "storage",
     "activeTab",
@@ -10,8 +10,7 @@
     "downloads"
   ],
   "host_permissions": [
-    "<all_urls>",
-    "https://translation.googleapis.com/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "service_worker.js"
@@ -26,11 +25,13 @@
         "<all_urls>"
       ],
       "js": [
+        "dictionaries/registry.js",
         "dictionaries/zh.js",
         "dictionaries/vi.js",
         "content.js"
       ],
-      "run_at": "document_idle"
+      "run_at": "document_idle",
+      "all_frames": true
     }
   ],
   "author": "Marcus Silva"

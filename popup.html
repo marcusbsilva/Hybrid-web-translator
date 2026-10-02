@@ -1,13 +1,33 @@
-<!doctype html><html><head><meta charset="utf-8"><style>
-body{font:13px system-ui;width:330px;padding:14px;color:#222}h3{margin:0 0 12px}.row{display:flex;justify-content:space-between;align-items:center;margin:9px 0}.stack{margin:10px 0}label{font-weight:600}input[type=password],input[type=number]{width:100%;box-sizing:border-box;padding:7px;margin-top:5px}button{padding:7px 10px;margin:4px 4px 0 0}.muted{color:#666;font-size:12px;line-height:1.4}.status{background:#f5f5f5;padding:8px;margin:10px 0;border-radius:6px;line-height:1.45}.warn{color:#8a5a00}
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+:root{color-scheme:light dark}*{box-sizing:border-box}body{font:13px system-ui,-apple-system,"Segoe UI",sans-serif;width:390px;margin:0;padding:16px;color:#202124;background:#fff}h2{font-size:16px;margin:0}.sub{font-size:11px;color:#777;margin:2px 0 14px}.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0}.stack{margin:11px 0}label{font-weight:600;display:block}.hint{color:#6b7280;font-size:11px;line-height:1.35;margin-top:5px}input[type=password],input[type=number],input[type=url],select{width:100%;padding:8px 9px;margin-top:5px;border:1px solid #c9cdd2;border-radius:6px;background:#fff;color:#202124}.section{border-top:1px solid #e6e8eb;padding-top:8px;margin-top:5px}.toggleLabel{font-weight:500}.hidden{display:none}.actions{margin:13px 0}.primaryBtn{padding:8px 11px;border:1px solid #b8bdc4;border-radius:6px;background:#fff;cursor:pointer}.status{margin:12px 0 10px;border:1px solid #e1e4e8;border-radius:9px;overflow:hidden;background:#f8f9fa}.statusHead{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-bottom:1px solid #e5e7eb}.statusTitle{font-weight:700}.badge{font-size:11px;font-weight:700;padding:3px 7px;border-radius:999px}.on{background:#dcfce7;color:#166534}.off{background:#f1f3f4;color:#5f6368}.statusGrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e5e7eb}.metric{background:#fff;padding:9px 10px}.metricLabel{font-size:10px;text-transform:uppercase;letter-spacing:.35px;color:#777}.metricValue{font-size:14px;font-weight:650;margin-top:2px;word-break:break-word}.engine{padding:8px 10px;font-size:11px;color:#6b7280;border-top:1px solid #e5e7eb}.notice{font-size:11px;line-height:1.4;color:#666;margin-top:8px}.warn{color:#8a5a00}.saved{font-size:11px;color:#16713a;opacity:0;transition:opacity .2s}.saved.show{opacity:1}@media(prefers-color-scheme:dark){body{background:#202124;color:#e8eaed}.sub,.hint,.notice,.engine,.metricLabel{color:#aeb4bb}input[type=password],input[type=number],input[type=url],select,.primaryBtn{background:#292a2d;color:#e8eaed;border-color:#555}.section{border-color:#3c4043}.status{background:#292a2d;border-color:#3c4043}.statusHead,.engine{border-color:#3c4043}.statusGrid{background:#3c4043}.metric{background:#292a2d}.off{background:#3c4043;color:#bdc1c6}}
 </style></head><body>
-<h3>Hybrid-web-translator</h3>
-<div class="row"><span>Translation</span><input id="enabled" type="checkbox"></div>
-<div class="row"><span>Hybrid Google fallback</span><input id="hybrid" type="checkbox"></div>
-<div class="stack"><label>Google Cloud Translation API key</label><input id="key" type="password" placeholder="Optional — stored locally"></div>
-<div class="stack"><label>Daily API character budget</label><input id="budget" type="number" min="1000" step="1000" value="15000"></div>
-<button id="save">Save</button><button id="export">Export learned dictionary</button><button id="clear">Clear learned</button>
-<div id="stats" class="status">Loading…</div>
-<div class="muted">Local dictionary is always used first. Google is called only for unresolved/low-confidence text, in batches, and each result is learned locally so the same source text does not need another API call.</div>
-<div class="muted warn">The installed extension package cannot rewrite its own JS dictionary files at runtime. Learned entries are persisted in Chrome extension storage and can be exported as JSON for permanent merging.</div>
+<h2>Hybrid-web-translator</h2><div class="sub">Local-first translation with optional hybrid learning</div>
+<div class="section">
+  <div class="row"><span class="toggleLabel">Translation</span><input id="enabled" type="checkbox"></div>
+  <div class="row"><span class="toggleLabel">Hybrid learning fallback</span><input id="hybrid" type="checkbox"></div>
+</div>
+<div class="stack"><label>Fallback provider</label><select id="provider">
+<option value="lingva">Lingva — no API key</option><option value="libre">LibreTranslate — self-host / API key</option><option value="google">Google Cloud Translation</option><option value="deepl">DeepL API</option>
+</select></div>
+<div id="lingvaBox" class="stack providerBox"><label>Lingva instance</label><input id="lingva" type="url" value="https://translate.plausibility.cloud"><div class="hint">No API key required. Community instances may rate-limit or go offline.</div></div>
+<div id="libreBox" class="stack providerBox hidden"><label>LibreTranslate endpoint</label><input id="libre" type="url" value="http://localhost:5000"><label style="margin-top:8px">LibreTranslate API key</label><input id="libreKey" type="password" placeholder="Optional for self-hosted"><div class="hint">Self-hosted instances can work without a key.</div></div>
+<div id="googleBox" class="stack providerBox hidden"><label>Google Cloud Translation API key</label><input id="key" type="password" placeholder="Required for Google Cloud"></div>
+<div id="deeplBox" class="stack providerBox hidden"><label>DeepL API key</label><input id="deeplKey" type="password" placeholder="Required for DeepL"></div>
+<div class="stack"><label>Daily fallback character budget</label><input id="budget" type="number" min="1000" step="1000" value="15000"><div class="hint">Maximum text sent to the fallback provider per day.</div></div>
+<div class="actions"><button id="export" class="primaryBtn">Export learned dictionary</button> <span id="saved" class="saved">Saved automatically</span></div>
+<div id="stats" class="status">
+  <div class="statusHead"><span class="statusTitle">Translator status</span><span id="hybridBadge" class="badge off">Hybrid OFF</span></div>
+  <div class="statusGrid">
+    <div class="metric"><div class="metricLabel">Provider</div><div id="providerStat" class="metricValue">—</div></div>
+    <div class="metric"><div class="metricLabel">Learned</div><div id="learnedStat" class="metricValue">—</div></div>
+    <div class="metric"><div class="metricLabel">Local cache</div><div id="cacheStat" class="metricValue">—</div></div>
+    <div class="metric"><div class="metricLabel">Fallback today</div><div id="fallbackStat" class="metricValue">—</div></div>
+    <div class="metric"><div class="metricLabel">Chinese dictionary</div><div id="zhStat" class="metricValue">—</div></div>
+    <div class="metric"><div class="metricLabel">Vietnamese dictionary</div><div id="viStat" class="metricValue">—</div></div>
+  </div>
+  <div id="engineStat" class="engine">Loading engine…</div>
+</div>
+<div class="notice">Settings are saved automatically. Local dictionaries are always tried first; hybrid mode sends only unresolved or low-confidence unique text to the selected provider and stores successful translations locally.</div>
+<div class="notice warn">API keys stay in <code>chrome.storage.local</code>. Never commit keys to GitHub.</div>
 <script src="popup.js"></script></body></html>

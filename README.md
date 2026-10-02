@@ -4,23 +4,24 @@ A low-CPU Chrome extension that translates **Chinese and Vietnamese web pages in
 
 Hybrid-web-translator was created for pages where full-page machine translation can interfere with layout, controls, event handlers, or dynamically rendered content. Instead of replacing page HTML, the extension translates text nodes and a small set of safe text attributes in place.
 
-Uses a hybrid architecture: a fast local dictionary/segmentation engine handles translation first, while an optional Google Cloud Translation fallback is used only for unresolved or low-confidence text. Successful fallback translations are learned locally and reused on later visits.
+Version **2.6** uses a hybrid architecture: the fast local dictionary/segmentation engine always runs first. For unresolved or low-confidence text, you can optionally use **Lingva (free, no API key)** or **Google Cloud Translation**. Successful fallback translations are learned locally and reused on later visits, reducing future network/API usage.
 
 ### Hybrid mode settings
 
-![Hybrid-web-translator hybrid mode settings](docs/images/hybrid-settings.png)
+![Hybrid-web-translator hybrid mode settings](docs/images/hybrid-settings-v3.3.png)
 
-The popup provides direct control over local translation, the optional Google Cloud Translation API fallback, the daily API character budget, and the learned local dictionary. An API key is **not required** for normal offline/local translation; it is only required when the optional hybrid fallback is enabled.
+The popup controls local translation, the hybrid provider, the daily fallback budget, and the learned dictionary. **Lingva requires no API key**; a key is required only when Google Cloud is selected. Public Lingva instances can be rate-limited or unavailable, so self-hosting is recommended when reliability matters.
 
 ## Features
 
 - Chinese (Simplified/Traditional-oriented lexicon) → English
 - Vietnamese → English
 - Local-first translation with no network requirement for known text
+- Optional **Lingva fallback with no API key**
 - Optional Google Cloud Translation Basic fallback
 - Persistent learned translation dictionary
 - Batches fallback requests to reduce API usage
-- Configurable daily Google API character budget
+- Configurable daily fallback character budget
 - Exact translation cache and request deduplication
 - Chinese phrase matching with DAG / frequency-based dynamic-programming segmentation
 - Domain vocabulary for games, forums, source-code communities, software and server administration
@@ -53,7 +54,8 @@ Page DOM
    │
    └─ Optional low-confidence fallback
           │
-          └─ Google Cloud Translation
+          ├─ Lingva (free / no API key)
+          └─ Google Cloud Translation (optional API key)
                  │
                  └─ learned locally for future reuse
 ```
@@ -75,19 +77,15 @@ The local translator works without an API key.
 
 ## Optional hybrid translation
 
-The Google fallback is **disabled by default**.
+Hybrid fallback is **disabled by default**. The extension offers two providers:
 
-To enable it:
+### Lingva — free / no API key
 
-1. Create/configure a Google Cloud project with Cloud Translation enabled.
-2. Create an API key suitable for Cloud Translation Basic.
-3. Open the extension popup.
-4. Enter the API key.
-5. Enable **Hybrid Google fallback**.
-6. Set a daily character budget.
-7. Save.
+Select **Lingva** in the popup and enable **Hybrid learning fallback**. The default configuration uses a public Lingva instance. Lingva exposes a REST API and can also be self-hosted. Public community instances may impose rate limits, change domains, or become unavailable; for dependable use, configure your own HTTPS Lingva instance.
 
-Do **not** commit an API key to this repository or distribute an unrestricted key in a packaged extension.
+### Google Cloud Translation
+
+Select **Google Cloud Translation**, enter your Cloud Translation Basic API key, enable hybrid fallback, and save. Google Cloud billing/activation requirements are controlled by Google. Do **not** commit an API key to this repository or distribute an unrestricted key in a packaged extension.
 
 The hybrid engine only queues text that the local engine considers unresolved or low-confidence. Unique strings are deduplicated, requests are batched, and successful translations are stored in `chrome.storage.local`. Chrome documents `chrome.storage` as extension-specific persistent storage; this project requests `unlimitedStorage` so the learned dictionary can grow beyond the normal local-storage quota.
 
@@ -120,7 +118,7 @@ When enabled, the fallback works as a teacher for the local engine:
 Unknown / low-confidence source text
               │
               ▼
-      Google translation
+   Selected fallback translation
               │
               ▼
     chrome.storage.local
@@ -173,7 +171,7 @@ Performance measures include:
 - Translation cache
 - Learned exact-match cache
 - Deduplicated fallback queue
-- Batched Google requests
+- Deduplicated fallback requests
 - Incremental `MutationObserver` processing
 - `requestIdleCallback`/batched initial traversal where available
 - No periodic full-page rescans
@@ -220,6 +218,143 @@ The **software source code written for Hybrid-web-translator** is licensed under
 
 Dictionary datasets can have separate licenses. In particular, any dictionary generated from CC-CEDICT remains subject to **CC BY-SA 4.0** and is not relicensed under MIT merely by being distributed with this project. See `THIRD_PARTY_NOTICES.md`.
 
+
+## Extension interface
+
+Hybrid-web-translator uses a compact popup designed to keep the local translator and optional hybrid learning controls easy to understand.
+
+![Hybrid-web-translator settings](docs/images/hybrid-settings-v3.3.png)
+
+The main controls are:
+
+- **Translation** — enables or disables page translation.
+- **Hybrid learning fallback** — enables external fallback only when the local dictionaries cannot confidently resolve a text.
+- **Fallback provider** — selects the translation service used for unresolved text. Lingva can be used without an API key; other configured providers can be selected when available.
+- **Lingva instance** — allows the community/self-hosted Lingva endpoint to be changed without modifying the extension source.
+- **Daily fallback character budget** — limits how much unresolved text may be sent to the selected fallback provider each day.
+- **Export learned dictionary** — exports translations learned through hybrid mode so they can be reviewed and permanently merged into the language dictionaries.
+
+All settings are **saved automatically** when changed. There is no separate Save button.
+
+## Translator status
+
+The status panel presents the most useful runtime information separately instead of combining everything into one status line.
+
+![Hybrid-web-translator translator status](docs/images/translator-status-v3.3.png)
+
+It reports:
+
+- whether **Hybrid Learning** is ON or OFF;
+- the currently selected **fallback provider**;
+- the number of **learned translations**;
+- the current **local translation cache** size;
+- how many fallback characters were used **today**;
+- the number of entries in the **Chinese dictionary**;
+- the number of entries in the **Vietnamese dictionary**.
+
+Local dictionaries are always attempted first. Hybrid mode sends only unresolved or low-confidence unique text to the selected provider and stores successful translations locally, reducing repeated external requests.
+
+## Language-based dictionaries
+
+Dictionary maintenance is independent from the translation engine and is organized strictly by language:
+
+```text
+dictionaries/
+├── registry.js
+├── zh.js
+└── vi.js
+```
+
+There are no website-specific dictionaries. Vocabulary collected from Aigei, GameCBG, CLBGamesVN, Forumotion, Discuz, vBulletin, or another supported website is merged into the appropriate language dictionary.
+
+This means a Chinese translation learned from one website is available on every website where the same text appears.
+
+The current bundled dictionaries contain over **1,000 Chinese entries** and over **350 Vietnamese entries**. They include common web interface terminology as well as vocabulary frequently encountered in forums, game-development communities, asset libraries, source-code pages, comments, download pages, Unity/Unreal content, 2D assets, AI tools, and related interfaces.
+
+## Local-first hybrid learning
+
+The translation pipeline is designed to minimize network use:
+
+```text
+Page text
+   ↓
+Language detection
+   ↓
+Local language dictionary
+   ↓
+DAG / Viterbi segmentation
+   ↓
+Local / learned cache
+   ↓
+Resolved? ── Yes → Replace text locally
+   │
+   No
+   ↓
+Optional fallback provider
+   ↓
+Successful translation
+   ↓
+Learned dictionary (chrome.storage.local)
+   ↓
+Future occurrences are resolved locally
+```
+
+The fallback is therefore a learning mechanism rather than the primary translation engine. Repeated source text does not need to be sent to the provider again after a successful translation has been learned.
+
+## Dynamic pages and comments
+
+The content scanner supports both the initial DOM and dynamically inserted content. A `MutationObserver` watches for new or changed text nodes without continuously polling the page.
+
+This allows translation to continue working with forum replies, comments, pagination/AJAX content, dynamically rendered sections, and many modern websites while keeping CPU usage substantially lower than repeated full-page rescanning.
+
+The extension also handles mixed Chinese/English and Vietnamese/English strings and supports short forum comments that would otherwise be easy to miss.
+
+## Corpus crawler
+
+The repository includes the dictionary corpus crawler directly under `tools/`:
+
+```text
+tools/
+├── corpus_crawler.py
+├── crawl.bat
+├── crawl.sh
+├── requirements.txt
+└── README.md
+```
+
+The crawler explores configured public pages, extracts Chinese and Vietnamese text, deduplicates it, preserves source/context information, and skips strings that are already present in the corresponding language dictionary.
+
+Windows:
+
+```bat
+tools\crawl.bat --max-pages 5000 --delay 1.5
+```
+
+Linux:
+
+```bash
+bash tools/crawl.sh --max-pages 5000 --delay 1.5
+```
+
+For JavaScript-heavy websites, Playwright rendering can be enabled:
+
+```bash
+python -m pip install playwright
+python -m playwright install chromium
+```
+
+```bash
+bash tools/crawl.sh --render-js aigei.com --max-pages 5000 --delay 1.5
+```
+
+The crawler is a development tool only. It is not executed by the Chrome extension and Python is not required for normal extension use.
+
+## Privacy and API keys
+
+Local dictionary translation does not require an API key and does not need to send successfully resolved text to an external translation provider.
+
+When hybrid mode is enabled, unresolved text may be sent to the provider selected by the user. Provider credentials, when required, are stored in `chrome.storage.local`. API keys must never be committed to the repository.
+
 ## Contributing
 
 Contributions are welcome. Useful areas include:
@@ -237,3 +372,75 @@ When contributing dictionary data, include its source and license. Do not submit
 ## Disclaimer
 
 Machine and dictionary-based translation can be inaccurate. Do not rely on this extension as the sole translation source for legal, medical, financial, safety-critical, or other high-stakes content.
+
+## v3.3 — Auto-save settings & clearer status panel
+
+Version 3.0 removes the manual Save and Clear learned controls. Every setting is persisted automatically and propagated to active content scripts. The popup status area is now presented as separate metrics for hybrid state, provider, learned entries, local cache, language dictionary sizes, fallback usage, and engine version.
+
+## v2.8 — Multi-platform comments & fallback providers
+
+Version 2.8 broadens dynamic post/comment scanning beyond Discuz to common structures used by vBulletin, phpBB/Forumotion, XenForo, Flarum, NodeBB, WordPress comments and generic post containers. Content scripts also run in frames, allowing comments embedded in eligible frames to be translated without replacing page HTML.
+
+The hybrid-learning toggle now applies immediately: changing it updates `chrome.storage.local` and notifies the active content script instead of waiting for a page reload. The provider list now supports Lingva, Google Cloud Translation, LibreTranslate (including self-hosted instances), and DeepL API. Successful fallback translations continue to be stored in the learned local dictionary.
+
+The bundled Chinese vocabulary was expanded for Aigei-style game asset/source-code pages, while the Vietnamese vocabulary was expanded for CLBGamesVN/Forumotion/vBulletin forum navigation, posts and development terminology.
+
+
+## Modular dictionaries (v3.3)
+
+Dictionaries are now loaded independently from the translation engine. The engine lives in `content.js`; dictionary modules live under `dictionaries/zh/` and `dictionaries/vi/`. A dictionary update can therefore be distributed without replacing the engine.
+
+Current modules:
+
+```text
+dictionaries/
+  registry.js
+  zh/core.js
+  vi/core.js
+  vi/forumvi.js
+```
+
+To update Forumotion/CLBGAMESVN vocabulary, replace only `dictionaries/vi/forumvi.js`, reload the extension in `chrome://extensions`, then reload the page.
+
+
+## Dictionary maintenance (v3.3)
+
+Dictionaries are language-based only: `dictionaries/zh.js` and `dictionaries/vi.js`. Website-specific dictionary modules are no longer used. Updating vocabulary does not require changing the translation engine.
+
+
+## Corpus crawler
+
+The dictionary corpus crawler is included in `tools/` and uses the same language-only dictionary structure as the extension.
+
+```text
+tools/
+├── corpus_crawler.py
+├── crawl.bat
+├── requirements.txt
+└── README.md
+```
+
+Install its dependencies:
+
+```bash
+python -m pip install -r tools/requirements.txt
+```
+
+On Windows, `tools\crawl.bat` automatically points the crawler at `dictionaries\zh.js` and `dictionaries\vi.js`:
+
+```bat
+tools\crawl.bat --max-pages 5000 --delay 1.5
+```
+
+For JavaScript-heavy sites, install Playwright separately and pass the renderer option:
+
+```bash
+python -m pip install playwright
+python -m playwright install chromium
+```
+
+```bat
+tools\crawl.bat --render-js aigei.com --max-pages 5000 --delay 1.5
+```
+
+Crawler output remains development data and is not used by the Chrome extension at runtime.

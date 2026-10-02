@@ -57,3 +57,19 @@ Chrome Extensions / Manifest V3 documentation was used as the platform reference
 ---
 
 If you add a third-party dataset, model, library, generated dictionary, or substantial copied/adapted code, update this file and preserve the applicable copyright and license notices.
+
+
+## Lingva Translate
+
+Hybrid-web-translator can optionally call a user-configurable Lingva Translate instance as a no-key network fallback. Lingva Translate is an independent open-source project licensed under GNU AGPLv3. This project does not bundle or modify Lingva server code; it only interoperates with its documented HTTP API. Public Lingva instances are operated by third parties and may have their own availability, privacy, and usage policies.
+
+## Additional optional translation providers (v2.8)
+
+Hybrid-web-translator can interoperate over HTTP with user-selected translation services. No provider SDK code is bundled into the extension.
+
+- LibreTranslate — open-source machine translation service powered by Argos Translate. Hosted instances may require an API key; self-hosted instances can be configured without one.
+- DeepL API — optional external translation provider requiring the user's own API credentials.
+- Google Cloud Translation — optional external provider requiring the user's own API credentials/billing configuration.
+- Lingva Translate — optional community/self-hosted translation frontend with a public REST API; availability of public instances is not guaranteed.
+
+Each external service remains subject to its own terms, privacy policy, quotas and licensing.
