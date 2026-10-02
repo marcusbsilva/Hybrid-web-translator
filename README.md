@@ -1,6 +1,6 @@
 # Hybrid-web-translator
 
-A lightweight, local-first Chrome extension that translates **Chinese and Vietnamese into English** while preserving page structure and interactivity.
+A lightweight and local Chrome extension that translates **Chinese and Vietnamese Web Pages into English** while preserving page structure and interactivity.
 
 It uses local language dictionaries first and can optionally call an external translation provider for unresolved or low-confidence text. Successful fallback translations are learned locally and reused later.
 
