@@ -1,6 +1,6 @@
 # Hybrid Web Translator
 
-**Local dictionaries first. Optional translation services when you need them.**
+**Local dictionaries first. Optional onlinw translation services when you need them.**
 
 [Português (Brasil)](readme-ptbr.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Dictionary sources](THIRD_PARTY_NOTICES.md)
 
