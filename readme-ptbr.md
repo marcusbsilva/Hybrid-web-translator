@@ -1,6 +1,6 @@
 # Hybrid Web Translator
 
-**Dicionários locais primeiro. Serviços opcionais quando você precisar.**
+**Traduções locais primeiro. Tradução online opcionais quando você precisar.**
 
 [English](README.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Licenças dos dicionários](THIRD_PARTY_NOTICES.md)
 
