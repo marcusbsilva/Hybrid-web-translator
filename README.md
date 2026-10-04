@@ -71,20 +71,6 @@ bash tools/crawl.sh --translate-url http://localhost:5001
 
 Use `--no-translate` for text collection only. Install crawler requirements as described in its guide. Crawl outputs, caches and compiled Python files are generated locally rather than shipped in this release.
 
-## Development and validation
-
-JavaScript core/worker tests run with Node.js. Browser tests additionally require Playwright and Chromium:
-
-```sh
-node tests/engine.test.cjs
-node tests/worker.test.cjs
-node tests/routing.test.cjs
-node tests/local-budget.test.cjs
-node tests/provider-migration.test.cjs
-```
-
-See [docs/VALIDATION.md](docs/VALIDATION.md) for actual checks and limitations. Browser API mocks test behavior but are not equivalent to a real installed-extension session.
-
 ## License
 
 Original extension code: [MIT](LICENSE). Dictionaries retain their individual CC BY-SA / GPL and other source-specific terms. Required notices, credit headers and applicable corresponding source archives remain in `third_party` and the source manifests. Do not remove these when redistributing dictionary packs.
