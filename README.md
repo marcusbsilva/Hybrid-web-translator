@@ -32,7 +32,7 @@ Dictionary entry counts describe vocabulary, not guaranteed coverage of arbitrar
 
 Subsequent setting changes and fallback activation apply immediately. Keep the same extension directory when replacing an existing unpacked installation if you want to retain its browser identity and stored dictionaries; remove obsolete generated folders from that directory separately.
 
-## Private local translation with Studio
+## Private local translation with LocalTranslator Studio
 
 This version includes a ready-to-go integration with **LocalTranslator Studio** a dedicated local-server translator.
 
