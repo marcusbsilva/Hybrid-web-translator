@@ -57,38 +57,6 @@ With fallback disabled, dictionary matching stays local. Enabling fallback sends
 
 Settings, API keys and learned translations are stored in the extension’s local storage. Public instances may become unavailable. See [SECURITY.md](SECURITY.md) for security and privacy details.
 
-## Dictionaries and crawler
-
-The text-only crawler reads website URLs from `tools/sites.txt`, skips known phrases and writes incremental dictionary output as it works. It collects text without downloading images or other page assets.
-
-Its default translation server is `http://localhost:5000`, so specifying the address is optional. Install the crawler requirements according to its guide, add the websites you want to analyze to `tools/sites.txt`, and run a command from the project root.
-
-### Windows CMD
-
-```bat
-tools\crawl.bat
-```
-
-To use another server address or port:
-
-```bat
-tools\crawl.bat --translate-url http://localhost:5001
-```
-
-### Linux
-
-```sh
-bash tools/crawl.sh
-```
-
-To use another server address or port:
-
-```sh
-bash tools/crawl.sh --translate-url http://localhost:5001
-```
-
-Add `--no-translate` to collect text without requesting translations. Crawl output, caches and compiled Python files are generated locally and are not included in this release.
-
 ## License and attribution
 
 Original extension code is licensed under [MIT](LICENSE). Dictionaries retain their individual CC BY-SA, GPL and other source-specific licenses.
