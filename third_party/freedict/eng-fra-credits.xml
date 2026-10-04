@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:teiHeader xmlns:ns0="http://www.tei-c.org/ns/1.0">
+      <ns0:fileDesc>
+         <ns0:titleStmt>
+            <ns0:title>English-French FreeDict Dictionary</ns0:title>
+            <ns0:respStmt>
+               <ns0:resp>Maintainer</ns0:resp>
+               <ns0:name>[up for grabs]</ns0:name>
+            </ns0:respStmt>
+         </ns0:titleStmt>
+         <ns0:editionStmt>
+            <ns0:edition>0.1.6</ns0:edition>
+         </ns0:editionStmt>
+         <ns0:extent>8799 headwords</ns0:extent>
+         <ns0:publicationStmt>
+            <ns0:publisher>FreeDict</ns0:publisher>
+            <ns0:availability status="free">
+               <ns0:p>Copyright (C) 1999-2017 by various authors listed below.</ns0:p>
+               <ns0:p>Available under the terms of the <ns0:ref target="https://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License ver. 2.0 and any later version</ns0:ref>.</ns0:p>
+            </ns0:availability>
+            <ns0:pubPlace>
+               <ns0:ref target="http://freedict.org/">http://freedict.org/</ns0:ref>
+            </ns0:pubPlace>
+         </ns0:publicationStmt>
+         <ns0:notesStmt>
+            <ns0:note type="status">small</ns0:note>
+         </ns0:notesStmt>
+         <ns0:sourceDesc>
+            <ns0:p>Home: <ns0:ref target="http://freedict.org/">http://freedict.org/</ns0:ref></ns0:p>
+            <ns0:p>This Database was originally generated from ergane, <ns0:ref target="http://www.travlang.com">http://www.travlang.com</ns0:ref>.</ns0:p>
+         </ns0:sourceDesc>
+      </ns0:fileDesc>
+      <ns0:encodingDesc>
+         <ns0:projectDesc>
+            <ns0:p>This dictionary comes to you through nice people making it available for free and for
+        good. It is part of the FreeDict project, <ns0:ref target="http://freedict.org/">http://freedict.org/</ns0:ref>. This project aims to make translating
+        dictionaries available for free. Your contributions are welcome!</ns0:p>
+         </ns0:projectDesc>
+      </ns0:encodingDesc>
+      <ns0:revisionDesc>
+         <ns0:change when="2019-01-25"> 
+            <ns0:name>Sylvain Leroux</ns0:name>
+            Add missing spaces, fix typo in a translation
+         </ns0:change>
+         <ns0:change when="2017-11-30" who="#humenda" n="0.1.6">
+            <ns0:name>Sebastian Humenda</ns0:name>
+            <ns0:list>
+               <ns0:item>add unified licence stanza</ns0:item>
+               <ns0:item>remove duplicated translations</ns0:item>
+            </ns0:list>
+         </ns0:change>
+         <ns0:change when="2017-10-24" who="#humenda">
+            <ns0:date>2017-10-24</ns0:date>
+            <ns0:name>Sebastian Humenda</ns0:name>: Valentino (GitHub) fixed some parsing errors in a few entries. I fixed some more.
+         </ns0:change>
+         <ns0:change when="2010-10-25">
+            <ns0:date>2010-10-25</ns0:date>
+            <ns0:name>Piotr Bański</ns0:name>: Conversion of TEI P4 source into P5 via
+            tools/freedict_P4toP5.xsl; manual clean-up. We are back to version from before Michael
+            Bunk's re-import from Ergane of 2006-12-19 that was rolled back due to Ergane's cryptic
+            change of database licensing.</ns0:change>
+         <ns0:change>
+            <ns0:date>2004-06-26</ns0:date>
+            <ns0:name>Michael Bunk</ns0:name>Converted file to TEI P4</ns0:change>
+         <ns0:change>
+            <ns0:date>2000-04-26</ns0:date>
+            <ns0:name>Horst Eyermann</ns0:name>Database was converted to TEI format and checked into CVS</ns0:change>
+         <ns0:change>
+            <ns0:date>2000-01-09</ns0:date>
+            <ns0:name>Horst Eyermann</ns0:name>Phonetics added - machine generated from MBRODICT</ns0:change>
+         <ns0:change>
+            <ns0:date>2000-01-01</ns0:date>
+            <ns0:name>Horst Eyermann</ns0:name>This Database was  generated from ergane (http://www.travlang.com) - Thanks!</ns0:change>
+      </ns0:revisionDesc>
+   </ns0:teiHeader>
+   

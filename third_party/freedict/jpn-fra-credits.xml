@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:teiHeader xmlns:ns0="http://www.tei-c.org/ns/1.0">
+      <ns0:fileDesc>
+         <ns0:titleStmt>
+            <ns0:title>Japanese-French FreeDict Dictionary</ns0:title>
+            <ns0:respStmt>
+					<ns0:resp>compiled by</ns0:resp>
+					<ns0:name>James William Breen</ns0:name>
+			</ns0:respStmt>
+            
+            <ns0:respStmt>
+               <ns0:resp>Maintainer</ns0:resp>
+               <ns0:name xml:id="darna">Denis Arnaud</ns0:name>
+            </ns0:respStmt>
+         </ns0:titleStmt>
+         <ns0:editionStmt>
+            <ns0:edition>0.1</ns0:edition>
+         </ns0:editionStmt>
+         <ns0:extent>14,891 headwords</ns0:extent>
+         <ns0:publicationStmt>
+            <ns0:publisher>FreeDict</ns0:publisher>
+            <ns0:availability status="free">
+               <ns0:p>Copyright (C) 1994-2016 by various authors listed below.</ns0:p>
+               <ns0:p>Available under the terms of the <ns0:ref target="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike Licence (V3.0)</ns0:ref>.</ns0:p>
+            </ns0:availability>
+            <ns0:pubPlace>
+               <ns0:ref target="http://freedict.org/">http://freedict.org/</ns0:ref>
+            </ns0:pubPlace>
+         </ns0:publicationStmt>
+         <ns0:notesStmt>
+            <ns0:note type="status">Big enough to be useful</ns0:note>
+         </ns0:notesStmt>
+         <ns0:sourceDesc>
+            <ns0:p>Home: <ns0:ref target="http://www.edrdg.org/jmdict/j_jmdict.html">http://www.edrdg.org/jmdict/j_jmdict.html</ns0:ref></ns0:p>
+            <ns0:p>This database was converted from the Japanese Multilingual Dictionary by Jim Breen.</ns0:p>
+         </ns0:sourceDesc>
+      </ns0:fileDesc>
+      <ns0:encodingDesc>
+         <ns0:projectDesc>
+            <ns0:p>This dictionary comes to you through nice people making it available for free and for good. 
+            It is part of the FreeDict project, <ns0:ref target="http://freedict.org/">http://freedict.org/</ns0:ref>. 
+            This project aims to make translating dictionaries available for free. Your contributions are
+        welcome!</ns0:p>
+         </ns0:projectDesc>
+    </ns0:encodingDesc>
+    
+	<ns0:profileDesc>
+		<ns0:langUsage>
+			<ns0:language ident="ja" n="source">
+                    <ns0:idno type="iso639-1">ja</ns0:idno>
+                    <ns0:idno type="iso639-3">jpn</ns0:idno>
+                    <ns0:name xml:lang="ja">日本語</ns0:name>
+                    <ns0:name xml:lang="fr">japonais</ns0:name>
+                    <ns0:name xml:lang="en">Japanese</ns0:name>
+                </ns0:language>
+                <ns0:language ident="fr" n="target">
+                    <ns0:idno type="iso639-1">fr</ns0:idno>
+                    <ns0:idno type="iso639-3">fra</ns0:idno>
+                    <ns0:name xml:lang="ja">フランス語</ns0:name>
+                    <ns0:name xml:lang="fr">français</ns0:name>
+                    <ns0:name xml:lang="en">French</ns0:name>
+                </ns0:language>
+            </ns0:langUsage>
+        </ns0:profileDesc>
+        
+        <ns0:revisionDesc>
+         <ns0:change when="2016-08-29">
+            <ns0:date>2016-08-29</ns0:date>
+            <ns0:name>Denis Arnaud</ns0:name>: Replaced xml:lang="fre" by xml:lang="fra" in cit nodes.</ns0:change>
+         <ns0:change when="2016-01-30">
+            <ns0:date>2016-01-30</ns0:date>
+            <ns0:name>Denis Arnaud</ns0:name>: Conversion of source into P5 TEI format. 
+            Original database comes from <ns0:ref target="http://www.edrdg.org/edrdg/index.html">Electronic Dictionary 
+            Research and Development Group</ns0:ref>, leader Jim Breen.
+            Jean-Marc Desperrier and contributors translated the english part to French.</ns0:change>
+      </ns0:revisionDesc>
+   </ns0:teiHeader>
+   

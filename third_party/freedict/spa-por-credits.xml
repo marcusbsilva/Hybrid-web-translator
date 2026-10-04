@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:teiHeader xmlns:ns0="http://www.tei-c.org/ns/1.0">
+      <ns0:fileDesc>
+         <ns0:titleStmt>
+            <ns0:title>Spanish-Portuguese FreeDict Dictionary</ns0:title>
+            <ns0:respStmt>
+               
+               <ns0:resp>Converted by</ns0:resp>
+               <ns0:name>Fred Ulisses Maranhão &lt;fred.maranhao@gmail.com&gt;</ns0:name>
+            </ns0:respStmt>
+            <ns0:respStmt>
+               
+               <ns0:resp>Maintainer</ns0:resp>
+               <ns0:name>Fred Ulisses Maranhão &lt;fred.maranhao@gmail.com&gt;</ns0:name>
+            </ns0:respStmt>
+         </ns0:titleStmt>
+         <ns0:editionStmt>
+            <ns0:edition>0.2.1</ns0:edition>
+         </ns0:editionStmt>
+         <ns0:extent>357 headwords</ns0:extent>
+         <ns0:publicationStmt>
+            <ns0:publisher>FreeDict</ns0:publisher>
+            <ns0:availability status="free">
+               <ns0:p>Copyright (C) 2014-2017 by Fred Maranhão.</ns0:p>
+               <ns0:p>Available under the terms of the <ns0:ref target="https://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License ver. 2.0 and any later version</ns0:ref>.</ns0:p>
+               <ns0:p>This program is free software; you can redistribute it and/or modify it under the
+                  terms of the GNU General Public License as published by the Free Software
+                  Foundation; either version 2 of the License, or (at your option) any later
+                  version.</ns0:p>
+               <ns0:p>This program is distributed in the hope that it will be useful, but WITHOUT ANY
+                  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+                  PARTICULAR PURPOSE. See the GNU General Public License for more details.</ns0:p>
+               <ns0:p>You should have received a copy of the GNU General Public License along with this
+                  program; if not, write to the Free Software Foundation, Inc., 59 Temple Place -
+                  Suite 330, Boston, MA 02111-1307, USA.</ns0:p>
+            </ns0:availability>
+            <ns0:pubPlace>
+               <ns0:ref target="http://freedict.org/">http://freedict.org/</ns0:ref>
+            </ns0:pubPlace>
+         </ns0:publicationStmt>
+         <ns0:notesStmt>
+            <ns0:note type="status">too small</ns0:note>
+         </ns0:notesStmt>
+         <ns0:sourceDesc>
+           <ns0:p>Written by hand by a native speaker of Portuguese.</ns0:p>
+         </ns0:sourceDesc>
+      </ns0:fileDesc>
+      <ns0:encodingDesc>
+         <ns0:projectDesc>
+            <ns0:p>This dictionary comes to you through nice people making it available for free and for
+            good. It is part of the FreeDict project,
+	    <ns0:ref target="http://freedict.org/">http://freedict.org/</ns0:ref>. This project aims to make
+	    translating dictionaries available for free. Your contributions are welcome!</ns0:p>
+         </ns0:projectDesc>
+      </ns0:encodingDesc>
+      <ns0:revisionDesc>
+          <ns0:change n="0.2.1" when="2017-12-09">
+              <ns0:name>Sebastian Humenda</ns0:name> update licencing stanza (thanks to Karl Bartel)
+          </ns0:change>
+          <ns0:change n="0.1.2" who="#maranhao" when="2015-05-08">
+              <ns0:date>2015-05-08</ns0:date>
+              <ns0:name>Fred Maranhão</ns0:name>
+              Added new entries.
+          </ns0:change>
+          <ns0:change n="0.1.1" who="#maranhao" when="2015-03-13">
+              <ns0:date>2015-03-13</ns0:date>
+              <ns0:name>Fred Maranhão</ns0:name>
+              Added new entries.
+          </ns0:change>
+          <ns0:change n="0.1" who="#maranhao" when="2014-07-16">
+            <ns0:date>2014-07-16</ns0:date>
+            <ns0:name>Fred Maranhão</ns0:name>
+	    This Database was copied from spa-eng freedict so all headwords in there can be used in here
+	 </ns0:change>
+      </ns0:revisionDesc>
+   </ns0:teiHeader>
+   
