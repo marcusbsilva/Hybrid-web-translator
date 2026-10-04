@@ -1,21 +1,5 @@
 # Contributing
 
-Thank you for improving Hybrid-web-translator.
+Keep dictionaries separate from the engine. Preserve one entry per line in editable `dictionaries/{zh,vi,th,ru,pt,es,fr,ja}.js` modules. These modules expose `SPT_DOMAIN_*` namespaces and merge into `SPT_*`. Use `*-general.js` for bulk reference imports, with attribution and licenses. Local dictionary values are English. Other page destinations use exact curated cross-language matches, pair-scoped learned results or a provider. Keep general glossary definitions out of cross-language phrase matching. Keep language aliases and completeness checks in languages.js and corpus language support in tools/language_support.py.
 
-## Guidelines
-
-1. Keep translation DOM-safe: do not replace whole-page `innerHTML`.
-2. Prefer indexed/local operations over continuous polling or expensive inference.
-3. Add tests/examples for mixed Chinese/English or Vietnamese/English strings when changing segmentation or spacing behavior.
-4. Keep the Google fallback optional and local-first.
-5. Never commit API keys or other credentials.
-6. For dictionary contributions, document the source and license. Do not import proprietary dictionary data without redistribution rights.
-7. If third-party code or data is added, update `THIRD_PARTY_NOTICES.md`.
-
-## Dictionary entries
-
-Prefer longer, domain-specific phrases when they materially improve natural English. Avoid adding context-specific translations for common words when they would make unrelated pages worse.
-
-## Pull requests
-
-Describe the problem, the affected language/domain, example input/output, and any performance impact.
+Do not include API keys, private corpora or models in the ZIP. Run the relevant tests listed in README when changing matching, activation, restoration or learning. Chromium tests require Playwright and a Chromium executable.

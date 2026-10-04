@@ -1,205 +1,104 @@
-# Hybrid-web-translator
+# Hybrid Web Translator
 
-A lightweight and local Chrome extension that translates **Chinese and Vietnamese Web Pages into English** while preserving page structure and interactivity.
+**Local dictionaries first. Optional translation services when you need them.**
 
-It uses local language dictionaries first and can optionally call an external translation provider for unresolved or low-confidence text. Successful fallback translations are learned locally and reused later.
+[Português (Brasil)](readme-ptbr.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Dictionary sources](THIRD_PARTY_NOTICES.md)
+
+A Manifest V3 browser extension that translates page text with local dictionaries, detects languages, and learns completed translations from an optional manually enabled fallback. Version **6.0.1** refreshes the interface and connects the local provider to LocalTranslator Studio.
+
+![Extension interface](docs/images/popup-v6.png)
+
+[View dark theme](docs/images/popup-v6-dark.png)
 
 ## Features
 
-- Chinese → English and Vietnamese → English
-- Local-first translation
-- Independent language dictionaries: `zh.js` and `vi.js`
-- DAG/Viterbi-based local segmentation
-- Optional hybrid learning fallback
-- Automatic learning and local reuse of fallback translations
-- Automatic settings saving
-- Configurable daily fallback character budget
-- Dynamic DOM translation with `MutationObserver`
-- Support for dynamically inserted posts, comments, navigation and UI text
-- Mixed-language text handling
-- Translation inside supported frames
-- Learned dictionary export
-- Built-in corpus crawler and dictionary development tools
-- No page HTML replacement or DOM reconstruction
+- Detect language → English defaults; selectable source and destination.
+- Chinese, Vietnamese, Thai, Russian, Portuguese, Spanish, French and Japanese dictionaries, with English as the bridge for other destinations.
+- Local bilingual indexes and learned translations scoped to the selected language pair.
+- Dynamic page text and supported text attributes processed without translating scripts or editable fields.
+- Manual fallback activation, applied immediately to the current page.
+- LocalTranslator Studio, Lingva, Google Cloud Translation and DeepL providers.
+- Connection diagnostics, remaining-text retry, JSON import/export and local usage statistics.
+- Clean light/dark styling following the system preference.
 
-## Interface
-
-Settings are saved automatically when changed. The popup includes controls for translation, hybrid learning, fallback provider configuration, the daily fallback character budget, and learned-dictionary export.
-
-![Hybrid-web-translator settings](docs/images/hybrid-settings-v3.3.png)
-
-
-## Translator status
-
-![Hybrid-web-translator translator status](docs/images/translator-status-v3.3.png)
-
-The status panel shows the current hybrid state, active provider, learned-entry count, local cache size, daily fallback usage, and the number of loaded Chinese and Vietnamese dictionary entries.
-
-## How it works
-
-```text
-Page text
-   ↓
-Language detection
-   ↓
-Local dictionary
-   ↓
-DAG / Viterbi segmentation
-   ↓
-Local translation + cache
-   ↓
-Resolved confidently?
-   ├── Yes → Apply translation
-   └── No
-        ↓
-   Hybrid fallback (optional)
-        ↓
-   External provider
-        ↓
-   Successful translation
-        ↓
-   Learned locally
-        ↓
-   Reused without another fallback request
-```
-
-The local engine is always attempted first. Hybrid mode fills gaps in the local dictionaries instead of acting as the primary translation engine.
-
-## Language dictionaries
-
-Dictionary data is independent from the translation engine and organized only by language:
-
-```text
-dictionaries/
-├── registry.js
-├── zh.js
-└── vi.js
-```
-
-`zh.js` contains Chinese → English entries and `vi.js` contains Vietnamese → English entries. `registry.js` initializes the dictionary objects consumed by the engine.
-
-There are no website-specific dictionaries. New vocabulary can be added to the appropriate language file without modifying `content.js`.
-
-## Hybrid learning
-
-Hybrid learning sends only unresolved or low-confidence text to the selected provider. Successful results are stored in `chrome.storage.local` and reused when the same source text appears again.
-
-The learned dictionary can be exported from the popup as JSON for review and permanent integration into the local dictionaries.
-
-### Fallback providers
-
-The current version supports:
-
-- **Lingva** — configurable instance; no API key required by the extension.
-- **LibreTranslate** — configurable endpoint with optional API key.
-- **Google Cloud Translation** — requires a Google Cloud Translation API key.
-- **DeepL API** — requires a DeepL API key.
-
-Availability, quotas, rate limits, pricing, and authentication requirements are controlled by each provider or instance.
-
-## Dynamic content and performance
-
-After the initial translation pass, a `MutationObserver` watches for new or changed text nodes instead of continuously rescanning the entire page.
-
-This allows newly loaded interface elements, posts, comments, and other dynamic content to be translated while reducing unnecessary CPU usage. Leading and trailing whitespace are preserved when text is replaced to reduce layout changes.
+Dictionary entry counts describe vocabulary, not guaranteed coverage of arbitrary sentences. Unknown text may remain untranslated when fallback is disabled. Local dictionaries and learned entries do not need a translation server.
 
 ## Installation
 
-1. Download or clone the repository.
-2. Open `chrome://extensions`.
-3. Enable **Developer mode**.
-4. Click **Load unpacked**.
-5. Select the project directory containing `manifest.json`.
+1. Extract the ZIP into a fresh folder to avoid carrying obsolete files forward.
+2. Open `chrome://extensions` or `edge://extensions`.
+3. Enable **Developer mode**, choose **Load unpacked**, and select the folder containing `manifest.json`.
+4. Reopen existing website tabs once after installing/upgrading the extension.
 
-## Project structure
+Subsequent setting changes and fallback activation apply immediately. Keep the same extension directory when replacing an existing unpacked installation if you want to retain its browser identity and stored dictionaries; remove obsolete generated folders from that directory separately.
 
-```text
-Hybrid-web-translator/
-├── manifest.json
-├── content.js
-├── service_worker.js
-├── popup.html
-├── popup.js
-├── dictionaries/
-│   ├── registry.js
-│   ├── zh.js
-│   └── vi.js
-├── tools/
-│   ├── corpus_crawler.py
-│   ├── build_dictionary.py
-│   ├── crawl.bat
-│   ├── crawl.sh
-│   ├── requirements.txt
-│   └── README.md
-├── docs/
-│   └── images/
-│       ├── hybrid-settings-v3.3.png
-│       └── translator-status-v3.3.png
-├── CONTRIBUTING.md
-├── SECURITY.md
-├── THIRD_PARTY_NOTICES.md
-└── LICENSE
-```
+## Private local translation with Studio
 
-## Corpus crawler
+The popup includes visible **Get LocalTranslator Studio** links in its header and a dedicated card beside the local-server address.
 
-The repository includes a Python crawler for collecting Chinese and Vietnamese text from public web pages for dictionary research.
+1. Download and install [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) separately.
+2. Start its server with `start.bat` on Windows or `bash start.sh` on Linux.
+3. In the extension, select **LocalTranslator Studio** and enter `http://localhost:5000` (or your chosen port).
+4. Use **Test connection and translation**.
+5. Enable **Hybrid learning fallback** manually when you want uncovered text translated.
 
-It can follow allowed public links, extract and deduplicate target-language text, preserve source/context information, skip strings already present in `zh.js` or `vi.js`, resume crawls with SQLite, and optionally render JavaScript-heavy pages with Playwright.
+The extension does not start, bundle or install the server. No API key is needed for Studio. Its Models page manages installed languages. Diagnostics report missing source/target models and translation errors.
 
-The crawler respects `robots.txt` by default and rate-limits requests.
+Local endpoints on `localhost`, `127.0.0.1` and `[::1]` bypass the daily fallback budget; usage is still counted. External services retain the configured budget. The fallback never enables itself when you choose another language.
 
-Install the basic dependencies:
+Existing obsolete local-provider settings are mapped to Studio on first use. A previous valid local-server address is preserved when available, along with learned translations and the manual fallback preference. Start the separate Studio application at that address.
 
-```bash
-python -m pip install -r tools/requirements.txt
-```
+## Other providers and privacy
 
-**Windows**
+| Provider | Configuration | Processing |
+|---|---|---|
+| LocalTranslator Studio | Server address | On your computer for a loopback address |
+| Community Lingva | Instance URL | External community service |
+| Google Cloud Translation | API key | External Google service |
+| DeepL | API key | External DeepL service |
+
+With fallback disabled, dictionary matching stays local. Enabling fallback sends eligible page text to the selected provider. Keys, settings and learned entries are kept in extension local storage. Public instances may be unavailable; diagnostics and cooldowns help report failures but cannot guarantee service availability. See [SECURITY.md](SECURITY.md).
+
+## Dictionaries and crawler
+
+The release preserves the existing curated/general dictionaries, bilingual packs, source manifests and licensing material. Curated meanings take priority; ambiguous glossary senses are excluded from automatic matching. See [README-DICTIONARIES.md](README-DICTIONARIES.md) and [tools/README.md](tools/README.md).
+
+The text-only crawler reads site URLs from `tools/sites.txt`, skips known phrases, and writes incremental dictionary output. Its default translation server is `http://localhost:5000`; overriding it is optional:
 
 ```bat
-tools\crawl.bat --max-pages 5000 --delay 1.5
+tools\crawl.bat
+tools\crawl.bat --translate-url http://localhost:5001
 ```
 
-**Linux**
-
-```bash
-bash tools/crawl.sh --max-pages 5000 --delay 1.5
+```sh
+bash tools/crawl.sh
+bash tools/crawl.sh --translate-url http://localhost:5001
 ```
 
-For JavaScript-rendered pages:
+Use `--no-translate` for text collection only. Install crawler requirements as described in its guide. Crawl outputs, caches and compiled Python files are generated locally rather than shipped in this release.
 
-```bash
-python -m pip install playwright
-python -m playwright install chromium
-bash tools/crawl.sh --render-js example.com --max-pages 5000 --delay 1.5
+## Development and validation
+
+JavaScript core/worker tests run with Node.js. Browser tests additionally require Playwright and Chromium:
+
+```sh
+node tests/engine.test.cjs
+node tests/worker.test.cjs
+node tests/routing.test.cjs
+node tests/local-budget.test.cjs
+node tests/provider-migration.test.cjs
 ```
 
-The crawler is a development tool only. Python is **not** required to use the Chrome extension.
+See [docs/VALIDATION.md](docs/VALIDATION.md) for actual checks and limitations. Browser API mocks test behavior but are not equivalent to a real installed-extension session. Dictionaries are not neural model weights and do not guarantee Google-equivalent output.
 
-## Privacy
-
-Known dictionary translations are processed locally.
-
-When hybrid learning is enabled, unresolved text may be sent to the fallback provider selected by the user. API keys and learned translations are stored in `chrome.storage.local`.
-
-Never commit API keys, private credentials, or other secrets to the repository.
-
-## Development
-
-Normal vocabulary updates require changes only to:
-
-```text
-dictionaries/zh.js
-dictionaries/vi.js
-```
-
-Translation-engine behavior remains separate in `content.js`.
-
-See `CONTRIBUTING.md` for contribution guidelines, `SECURITY.md` for security information, and `THIRD_PARTY_NOTICES.md` for third-party acknowledgements.
+The extension directory includes its implementation, tests, dictionary sources and notices. It no longer includes a server distribution, container launchers, crawler databases or a duplicate dictionary ZIP.
 
 ## License
 
-The original Hybrid-web-translator source code is distributed under the license included in `LICENSE`.
+Original extension code: [MIT](LICENSE). Dictionaries retain their individual CC BY-SA / GPL and other source-specific terms. Required notices, credit headers and applicable corresponding source archives remain in `third_party` and the source manifests. Do not remove these when redistributing dictionary packs.
 
-Third-party resources retain their respective licenses. See `THIRD_PARTY_NOTICES.md` for attribution and licensing details.
+Related local application: [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio). Author: [Marcus Silva](https://github.com/marcusbsilva).
+
+### Updating to 6.0.1
+
+Extract the complete package into the folder shown under **Extension details → Extension path**, then click **Reload** in `chrome://extensions` (or `edge://extensions`). Reopen the popup and verify that its header shows **6.0.1**. The popup loads `popup-v6.0.1.css` and uses a fixed 420 px layout.

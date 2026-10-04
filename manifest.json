@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Hybrid-web-translator",
-  "version": "3.3.0",
-  "description": "Low-CPU local Chinese/Vietnamese translator with independent language dictionaries and optional hybrid learning.",
+  "name": "Hybrid Web Translator",
+  "version": "6.0.1",
+  "description": "Translate pages with local dictionaries, optional manual fallback, and private local translation through LocalTranslator Studio.",
   "permissions": [
     "storage",
     "activeTab",
@@ -17,7 +17,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Hybrid-web-translator"
+    "default_title": "Hybrid Web Translator"
   },
   "content_scripts": [
     {
@@ -25,9 +25,25 @@
         "<all_urls>"
       ],
       "js": [
+        "languages.js",
         "dictionaries/registry.js",
+        "dictionaries/zh-general.js",
+        "dictionaries/vi-general.js",
+        "dictionaries/th-general.js",
+        "dictionaries/ru-general.js",
         "dictionaries/zh.js",
         "dictionaries/vi.js",
+        "dictionaries/th.js",
+        "dictionaries/ru.js",
+        "dictionaries/pt-general.js",
+        "dictionaries/es-general.js",
+        "dictionaries/fr-general.js",
+        "dictionaries/ja-general.js",
+        "dictionaries/pt.js",
+        "dictionaries/es.js",
+        "dictionaries/fr.js",
+        "dictionaries/ja.js",
+        "engine.js",
         "content.js"
       ],
       "run_at": "document_idle",
