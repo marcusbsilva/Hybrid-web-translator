@@ -1,0 +1,81 @@
+[
+  {
+    "language": "vi",
+    "url": "https://kaikki.org/dictionary/Vietnamese/kaikki.org-dictionary-Vietnamese.jsonl",
+    "entries": 28111,
+    "source_sha256": "afac710ce8305b6e5756e63f08e2d61c6403830afa3d9e19949f2730d5287e7f",
+    "bytes": 82771102,
+    "lines": 51896,
+    "complete_download": true,
+    "module_sha256": "113b5172ef838bcdf092b71bbfc2bef1bb9d81d51acafc2a2eb18c0d6024f874"
+  },
+  {
+    "language": "th",
+    "url": "https://kaikki.org/dictionary/Thai/kaikki.org-dictionary-Thai.jsonl",
+    "entries": 16390,
+    "source_sha256": "202acdc93b99bfeb240d48ee48a9f520160a85aa951ecb653eeb3d93b0b6fb57",
+    "bytes": 50456126,
+    "lines": 21020,
+    "complete_download": true,
+    "module_sha256": "84e3e32cc9ceb5c669caea01e009e48bc6aed86e958fb5bb8ebcf6ac6efae481"
+  },
+  {
+    "language": "ru",
+    "url": "https://kaikki.org/dictionary/Russian/kaikki.org-dictionary-Russian.jsonl",
+    "entries": 55196,
+    "source_sha256": "eab01279fe888f4fedf044350e04f8f619dd34bbd325ca186b0017e595ad3b6b",
+    "bytes": 944699204,
+    "lines": 442594,
+    "complete_download": true,
+    "module_sha256": "4e1244b2462a6636aa82ec67ba1941b040292d556a6d4cfb08392d6f30f2bdda"
+  },
+  {
+    "language": "pt",
+    "url": "https://kaikki.org/dictionary/Portuguese/kaikki.org-dictionary-Portuguese.jsonl",
+    "entries": 68880,
+    "source_sha256": "0067b22d52e706dfa374d03993c104797bf124b6e9da53ee4635c351b648a27c",
+    "bytes": 577009459,
+    "lines": 446043,
+    "complete_download": true,
+    "module_sha256": "c0d952d32024d4c80f2301ac65108f3aaee23315343c6fede75e823a0b0e168d"
+  },
+  {
+    "language": "es",
+    "url": "https://kaikki.org/dictionary/Spanish/kaikki.org-dictionary-Spanish.jsonl",
+    "entries": 105078,
+    "source_sha256": "a2cc93aee2b0ac24d869ec59e07ddef69d1379d54518f77b87c07a765139a2e6",
+    "bytes": 1054565864,
+    "lines": 811049,
+    "complete_download": true,
+    "module_sha256": "15f46fafbab0416045cb1838f80472a61e445a27ae5935e91b0ef2f11e043204"
+  },
+  {
+    "language": "fr",
+    "url": "https://kaikki.org/dictionary/French/kaikki.org-dictionary-French.jsonl",
+    "entries": 88778,
+    "source_sha256": "be18e3c1f5d83532318935301ccdfc6cbb3fc60416080242a9335d3007d01162",
+    "bytes": 583677221,
+    "lines": 403269,
+    "complete_download": true,
+    "module_sha256": "d3aefd374a94e6661a47d805fce8adff92a7e76349c966a1e479210b1d36fc6a"
+  },
+  {
+    "language": "ja",
+    "url": "https://kaikki.org/dictionary/Japanese/kaikki.org-dictionary-Japanese.jsonl",
+    "entries": 115650,
+    "source_sha256": "65be27d6c84f09ea2fa7622af56a7bfeba5dc807c88fd87b3d14dfc8fc112cc5",
+    "bytes": 384872852,
+    "lines": 199484,
+    "complete_download": true,
+    "module_sha256": "c2c285e16dea4ca3a7e0ec2eafd5945b554587f4790802a0b9d4998bbc9f0c1e"
+  },
+  {
+    "language": "zh",
+    "url": "https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz",
+    "entries": 188123,
+    "source_sha256": "c01e6d2d7f7545b4a29e08da17e7ec77a1b1fd1531009269e74e42f391fb2c1d",
+    "bytes": 3978169,
+    "complete_download": true,
+    "module_sha256": "a9165e0101cd63b6a26b91304cb24536cdb6fd51b672fe64cf16c88e342898ea"
+  }
+]

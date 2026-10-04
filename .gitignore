@@ -1,0 +1,32 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Python tooling
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local secrets / exports
+.env
+.env.*
+*.key
+learned-dictionary*.json
+hybrid-web-translator-learned-dictionary*.json
+
+# Generated packages
+*.zip
+*.crx
+*.pem
+
+# Optional generated dictionaries (can be force-added intentionally)
+dictionaries/*.generated.js
+node_modules/
+corpus_output/
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
