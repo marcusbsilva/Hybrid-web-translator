@@ -1,6 +1,0 @@
-# Public sites to crawl. One complete URL per line.
-# Blank lines and lines starting with # are ignored.
-https://www.gamecbg.com/
-https://clbgamesvn.forumvi.net/
-https://www.aigei.com/
-https://www.clbgamesvn.com/diendan/
