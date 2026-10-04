@@ -4,7 +4,7 @@
 
 [Português (Brasil)](readme-ptbr.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Dictionary sources](THIRD_PARTY_NOTICES.md)
 
-Hybrid Web Translator is a Manifest V3 Chrome extension that translates webpages using fast offline dictionaries while preserving the DOM. It includes built-in integration with LocalTranslator Studio for optional local API translation, check it: [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)
+Hybrid Web Translator is a Manifest V3 Chrome extension that translates webpages using fast offline dictionaries while preserving the DOM. It includes built-in integration with LocalTranslator Studio for optional local API translation, check: [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)
 
 ## Interface
 
