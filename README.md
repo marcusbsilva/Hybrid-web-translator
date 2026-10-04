@@ -6,7 +6,7 @@
 
 A Manifest V3 browser extension that translates page text with local dictionaries, detects languages, and learns completed translations from an optional manually enabled fallback. Version **6.0.1** refreshes the interface and connects the local provider to LocalTranslator Studio.
 
-![Extension interface](docs/images/popup-v6.png)
+![Extension interface](docs/images/popup-v6.png) ![Extension interface](docs/images/popup-v6-dark.png)
 
 [View dark theme](docs/images/popup-v6-dark.png)
 
