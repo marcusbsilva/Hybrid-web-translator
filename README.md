@@ -34,7 +34,7 @@ Subsequent setting changes and fallback activation apply immediately. Keep the s
 
 ## Private local translation with Studio
 
-The popup includes visible **Get LocalTranslator Studio** links in its header and a dedicated card beside the local-server address.
+This version includes a ready-to-go integration with **LocalTranslator Studio** a dedicated local-server translator.
 
 1. Download and install [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) separately.
 2. Start its server with `start.bat` on Windows or `bash start.sh` on Linux.
