@@ -4,15 +4,11 @@
 
 [Português (Brasil)](readme-ptbr.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Dictionary sources](THIRD_PARTY_NOTICES.md)
 
-Hybrid Web Translator is a Manifest V3 Chrome extension that translates webpages using fast offline dictionaries while preserving the DOM. It detects languages and can expand its local dictionaries through an optional, manually enabled API fallback service.
-
-Version **6.0.1** introduces a refreshed interface and built-in integration with **LocalTranslator Studio**, a dedicated local translation server that runs on your computer.
+Hybrid Web Translator is a Manifest V3 Chrome extension that translates webpages using fast offline dictionaries while preserving the DOM. It includes built-in integration with LocalTranslator Studio for optional local API translation, check it: [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)
 
 ## Interface
 
-![Hybrid Web Translator interface](docs/images/popup-v6.png)
-
-[View the dark theme](docs/images/popup-v6-dark.png)
+![Hybrid Web Translator interface](docs/images/popup-v6-dark.png)
 
 ## Features
 
@@ -35,24 +31,18 @@ Dictionary entry counts indicate vocabulary size, not guaranteed coverage of com
 4. Choose the folder containing `manifest.json`.
 5. Reload existing website tabs once to activate the extension.
 
-### Updating an existing installation
-
-Replace the files in the directory already loaded by your browser, then click **Reload** on the extension card. Reopen the popup and confirm that the header shows **6.0.1**. Reload existing website tabs once after an upgrade.
-
-Keep the same installation directory to retain the extension’s browser identity and stored dictionaries. Remove obsolete files separately when copying a new release over an older installation. Subsequent setting changes and manual fallback activation apply without reloading the page.
-
 ## Private local translation with LocalTranslator Studio
 
-This version includes ready-to-use integration with **[LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)**. Install the application separately to use it as the extension’s local translation server.
+This version includes ready-to-use integration with LocalTranslator Studio. Install the application separately to use it as the extension’s local translation server.
 
-1. Download and set up LocalTranslator Studio using its README.
+1. Download and set up **[LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)**.
 2. Start the server with `start.bat` on Windows or `bash start.sh` on Linux.
 3. In the extension’s **Translation service** section, select **LocalTranslator Studio**.
 4. Set **Local server address** to `http://localhost:5000`, or use your configured port.
 5. Click **Test connection and translation**.
 6. Enable **Hybrid learning fallback** manually when you want to translate text not covered by the dictionaries.
 
-No API key is required. When you use a loopback address such as `localhost` or `127.0.0.1`, translation runs on your computer. LocalTranslator Studio has no extension-imposed daily fallback budget for loopback addresses.
+No API key is required. When you use a loopback address such as `localhost` or `127.0.0.1`, translation runs on your computer.
 
 ## Other providers and privacy
 
@@ -63,7 +53,7 @@ No API key is required. When you use a loopback address such as `localhost` or `
 | Google Cloud Translation | API key | External Google service |
 | DeepL | API key | External DeepL service |
 
-With fallback disabled, dictionary matching stays local. Enabling fallback sends eligible page text to the selected provider. Choosing another language does not automatically enable fallback.
+With fallback disabled, dictionary matching stays local. Enabling fallback sends eligible page text to the selected provider.
 
 Settings, API keys and learned translations are stored in the extension’s local storage. Public instances may become unavailable. See [SECURITY.md](SECURITY.md) for security and privacy details.
 
