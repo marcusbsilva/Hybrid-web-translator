@@ -53,11 +53,9 @@ No API key is needed for LocalTranslator Studio.
 | Google Cloud Translation | API key | External Google service |
 | DeepL | API key | External DeepL service |
 
-With fallback disabled, dictionary matching stays local. Enabling fallback sends eligible page text to the selected provider. Keys, settings and learned entries are kept in extension local storage. Public instances may be unavailable; diagnostics and cooldowns help report failures but cannot guarantee service availability. See [SECURITY.md](SECURITY.md).
+With fallback disabled, dictionary matching stays local. Enabling fallback sends eligible page text to the selected provider. Keys, settings and learned entries are kept in extension local storage. Public instances may be unavailable; See [SECURITY.md](SECURITY.md) for more info.
 
 ## Dictionaries and crawler
-
-The release preserves the existing curated/general dictionaries, bilingual packs, source manifests and licensing material. Curated meanings take priority; ambiguous glossary senses are excluded from automatic matching. See [README-DICTIONARIES.md](README-DICTIONARIES.md) and [tools/README.md](tools/README.md).
 
 The text-only crawler reads site URLs from `tools/sites.txt`, skips known phrases, and writes incremental dictionary output. Its default translation server is `http://localhost:5000`; overriding it is optional:
 
@@ -85,16 +83,10 @@ node tests/local-budget.test.cjs
 node tests/provider-migration.test.cjs
 ```
 
-See [docs/VALIDATION.md](docs/VALIDATION.md) for actual checks and limitations. Browser API mocks test behavior but are not equivalent to a real installed-extension session. Dictionaries are not neural model weights and do not guarantee Google-equivalent output.
-
-The extension directory includes its implementation, tests, dictionary sources and notices. It no longer includes a server distribution, container launchers, crawler databases or a duplicate dictionary ZIP.
+See [docs/VALIDATION.md](docs/VALIDATION.md) for actual checks and limitations. Browser API mocks test behavior but are not equivalent to a real installed-extension session.
 
 ## License
 
 Original extension code: [MIT](LICENSE). Dictionaries retain their individual CC BY-SA / GPL and other source-specific terms. Required notices, credit headers and applicable corresponding source archives remain in `third_party` and the source manifests. Do not remove these when redistributing dictionary packs.
 
 Related local application: [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio). Author: [Marcus Silva](https://github.com/marcusbsilva).
-
-### Updating to 6.0.1
-
-Extract the complete package into the folder shown under **Extension details → Extension path**, then click **Reload** in `chrome://extensions` (or `edge://extensions`). Reopen the popup and verify that its header shows **6.0.1**. The popup loads `popup-v6.0.1.css` and uses a fixed 420 px layout.
