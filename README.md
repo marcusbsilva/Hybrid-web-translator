@@ -1,78 +1,110 @@
 # Hybrid Web Translator
 
-**Local dictionaries first. Optional online translation services when you need them.**
+**Local dictionaries first. Optional translation services when you need them.**
 
 [Português (Brasil)](readme-ptbr.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Dictionary sources](THIRD_PARTY_NOTICES.md)
 
-A Manifest V3 browser extension that translates page text with local dictionaries, detects languages, and learns completed translations from an optional manually enabled fallback. Version **6.0.1** refreshes the interface and connects the local provider to LocalTranslator Studio.
+Hybrid Web Translator is a Manifest V3 Chrome extension that translates webpages using fast offline dictionaries while preserving the DOM. It detects languages and can expand its local dictionaries through an optional, manually enabled API fallback service.
 
-![Extension interface](docs/images/popup-v6.png) ![Extension interface](docs/images/popup-v6-dark.png)
+Version **6.0.1** introduces a refreshed interface and built-in integration with **LocalTranslator Studio**, a dedicated local translation server that runs on your computer.
 
-[View dark theme](docs/images/popup-v6-dark.png)
+## Interface
+
+![Hybrid Web Translator interface](docs/images/popup-v6.png)
+
+[View the dark theme](docs/images/popup-v6-dark.png)
 
 ## Features
 
-- Detect language → English defaults; selectable source and destination.
-- Chinese, Vietnamese, Thai, Russian, Portuguese, Spanish, French and Japanese dictionaries, with English as the bridge for other destinations.
-- Local bilingual indexes and learned translations scoped to the selected language pair.
-- Dynamic page text and supported text attributes processed without translating scripts or editable fields.
-- Manual fallback activation, applied immediately to the current page.
-- LocalTranslator Studio, Lingva, Google Cloud Translation and DeepL providers.
-- Connection diagnostics, remaining-text retry, JSON import/export and local usage statistics.
-- Clean light/dark styling following the system preference.
+- **Language detection:** defaults to **Detect language → English**, with selectable source and target languages.
+- **Offline dictionaries:** Chinese, Vietnamese, Thai, Russian, Portuguese, Spanish, French and Japanese, with English as a bridge for other destinations.
+- **Learning:** local bilingual indexes and learned translations stored separately for each language pair.
+- **Page support:** processes dynamic text and supported text attributes while leaving scripts and editable fields untouched.
+- **Manual fallback:** translates uncovered text through the selected provider; activation applies immediately to the current page.
+- **Provider options:** LocalTranslator Studio, Community Lingva, Google Cloud Translation and DeepL.
+- **Diagnostics and tools:** connection testing, remaining-text retry, JSON import/export and local usage statistics.
+- **Readable interface:** light and dark themes follow your system preference.
 
-Dictionary entry counts describe vocabulary, not guaranteed coverage of arbitrary sentences. Unknown text may remain untranslated when fallback is disabled. Local dictionaries and learned entries do not need a translation server.
+Dictionary entry counts indicate vocabulary size, not guaranteed coverage of complete sentences. With fallback disabled, unknown text may remain untranslated. Local dictionaries and previously learned translations work without a translation server.
 
 ## Installation
 
-1. Extract the ZIP into a fresh folder to avoid carrying obsolete files forward.
+1. Extract the extension ZIP into a new folder.
 2. Open `chrome://extensions` or `edge://extensions`.
-3. Enable **Developer mode**, choose **Load unpacked**, and select the folder containing `manifest.json`.
-4. Reopen existing website tabs once after installing/upgrading the extension.
+3. Enable **Developer mode** and select **Load unpacked**.
+4. Choose the folder containing `manifest.json`.
+5. Reload existing website tabs once to activate the extension.
 
-Subsequent setting changes and fallback activation apply immediately. Keep the same extension directory when replacing an existing unpacked installation if you want to retain its browser identity and stored dictionaries; remove obsolete generated folders from that directory separately.
+### Updating an existing installation
+
+Replace the files in the directory already loaded by your browser, then click **Reload** on the extension card. Reopen the popup and confirm that the header shows **6.0.1**. Reload existing website tabs once after an upgrade.
+
+Keep the same installation directory to retain the extension’s browser identity and stored dictionaries. Remove obsolete files separately when copying a new release over an older installation. Subsequent setting changes and manual fallback activation apply without reloading the page.
 
 ## Private local translation with LocalTranslator Studio
 
-This version includes a ready-to-go integration with **LocalTranslator Studio** a dedicated local-server translator.
+This version includes ready-to-use integration with **[LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)**. Install the application separately to use it as the extension’s local translation server.
 
-1. Download and install [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) separately.
-2. Start its server with `start.bat` on Windows or `bash start.sh` on Linux.
-3. In the extension, select **LocalTranslator Studio** and enter `http://localhost:5000` (or your chosen port).
-4. Use **Test connection and translation**.
-5. Enable **Hybrid learning fallback** manually when you want uncovered text translated.
+1. Download and set up LocalTranslator Studio using its README.
+2. Start the server with `start.bat` on Windows or `bash start.sh` on Linux.
+3. In the extension’s **Translation service** section, select **LocalTranslator Studio**.
+4. Set **Local server address** to `http://localhost:5000`, or use your configured port.
+5. Click **Test connection and translation**.
+6. Enable **Hybrid learning fallback** manually when you want to translate text not covered by the dictionaries.
 
-No API key is needed for LocalTranslator Studio.
+No API key is required. When you use a loopback address such as `localhost` or `127.0.0.1`, translation runs on your computer. LocalTranslator Studio has no extension-imposed daily fallback budget for loopback addresses.
 
 ## Other providers and privacy
 
-| Provider | Configuration | Processing |
+| Provider | Configuration | Where text is processed |
 |---|---|---|
-| LocalTranslator Studio | Server address | On your computer for a loopback address |
+| LocalTranslator Studio | Local server address | On your computer when using a loopback address |
 | Community Lingva | Instance URL | External community service |
 | Google Cloud Translation | API key | External Google service |
 | DeepL | API key | External DeepL service |
 
-With fallback disabled, dictionary matching stays local. Enabling fallback sends eligible page text to the selected provider. Keys, settings and learned entries are kept in extension local storage. Public instances may be unavailable; See [SECURITY.md](SECURITY.md) for more info.
+With fallback disabled, dictionary matching stays local. Enabling fallback sends eligible page text to the selected provider. Choosing another language does not automatically enable fallback.
+
+Settings, API keys and learned translations are stored in the extension’s local storage. Public instances may become unavailable. See [SECURITY.md](SECURITY.md) for security and privacy details.
 
 ## Dictionaries and crawler
 
-The text-only crawler reads site URLs from `tools/sites.txt`, skips known phrases, and writes incremental dictionary output. Its default translation server is `http://localhost:5000`; overriding it is optional:
+The text-only crawler reads website URLs from `tools/sites.txt`, skips known phrases and writes incremental dictionary output as it works. It collects text without downloading images or other page assets.
+
+Its default translation server is `http://localhost:5000`, so specifying the address is optional. Install the crawler requirements according to its guide, add the websites you want to analyze to `tools/sites.txt`, and run a command from the project root.
+
+### Windows CMD
 
 ```bat
 tools\crawl.bat
+```
+
+To use another server address or port:
+
+```bat
 tools\crawl.bat --translate-url http://localhost:5001
 ```
 
+### Linux
+
 ```sh
 bash tools/crawl.sh
+```
+
+To use another server address or port:
+
+```sh
 bash tools/crawl.sh --translate-url http://localhost:5001
 ```
 
-Use `--no-translate` for text collection only. Install crawler requirements as described in its guide. Crawl outputs, caches and compiled Python files are generated locally rather than shipped in this release.
+Add `--no-translate` to collect text without requesting translations. Crawl output, caches and compiled Python files are generated locally and are not included in this release.
 
-## License
+## License and attribution
 
-Original extension code: [MIT](LICENSE). Dictionaries retain their individual CC BY-SA / GPL and other source-specific terms. Required notices, credit headers and applicable corresponding source archives remain in `third_party` and the source manifests. Do not remove these when redistributing dictionary packs.
+Original extension code is licensed under [MIT](LICENSE). Dictionaries retain their individual CC BY-SA, GPL and other source-specific licenses.
 
-Related local application: [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio). Author: [Marcus Silva](https://github.com/marcusbsilva).
+Required notices, credit headers, source manifests and applicable corresponding source archives are included in the project and `third_party`. Preserve these when redistributing dictionary packs. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution and source details.
+
+**Related application:** [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)  
+**Author:** [Marcus Silva](https://github.com/marcusbsilva)  
+**Extension repository:** [Hybrid Web Translator](https://github.com/marcusbsilva/Hybrid-web-translator)

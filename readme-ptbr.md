@@ -1,104 +1,110 @@
 # Hybrid Web Translator
 
-**Traduções locais primeiro. Traduções online opcionais quando você precisar.**
+**Dicionários locais primeiro. Serviços de tradução opcionais quando você precisar.**
 
-[English](README.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Licenças dos dicionários](THIRD_PARTY_NOTICES.md)
+[English](README.md) · [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio) · [Fontes dos dicionários](THIRD_PARTY_NOTICES.md)
 
-Extensão Manifest V3 para traduzir páginas com dicionários locais, detectar idiomas e aprender traduções completas obtidas por um fallback ativado manualmente. A versão **6.0.1** renova a interface e integra o provedor local ao LocalTranslator Studio.
+O Hybrid Web Translator é uma extensão Manifest V3 para Chrome que traduz páginas usando dicionários offline rápidos e preservando o DOM. Ela detecta idiomas e pode ampliar seus dicionários locais por meio de um serviço de fallback via API, ativado manualmente.
 
-![Interface da extensão](docs/images/popup-v6.png)
+A versão **6.0.1** apresenta uma interface renovada e integração nativa com o **LocalTranslator Studio**, um servidor dedicado de tradução local que funciona no seu computador.
 
-[Ver tema escuro](docs/images/popup-v6-dark.png)
+## Interface
+
+![Interface do Hybrid Web Translator](docs/images/popup-v6.png)
+
+[Ver o tema escuro](docs/images/popup-v6-dark.png)
 
 ## Funcionalidades
 
-- Detecção de idioma e inglês como destino padrão, com possibilidade de alteração.
-- Dicionários de chinês, vietnamita, tailandês, russo, português, espanhol, francês e japonês; inglês como ponte para outros destinos.
-- Pares bilíngues locais e traduções aprendidas separadas por origem/destino.
-- Processamento de texto dinâmico e atributos compatíveis, preservando scripts e campos editáveis.
-- Fallback manual com efeito imediato na página aberta.
-- Provedores LocalTranslator Studio, Lingva, Google Cloud Translation e DeepL.
-- Diagnóstico de conexão, nova tentativa para texto restante, importação/exportação JSON e estatísticas locais.
-- Interface em inglês, com tema claro/escuro conforme a preferência do sistema.
+- **Detecção de idioma:** usa **Detect language → English** como padrão, com seleção dos idiomas de origem e destino.
+- **Dicionários offline:** chinês, vietnamita, tailandês, russo, português, espanhol, francês e japonês, usando inglês como idioma intermediário para outros destinos.
+- **Aprendizado:** índices bilíngues locais e traduções aprendidas armazenadas separadamente para cada par de idiomas.
+- **Suporte a páginas:** processa textos dinâmicos e atributos de texto compatíveis, preservando scripts e campos editáveis.
+- **Fallback manual:** traduz textos não cobertos pelos dicionários usando o provedor selecionado; a ativação se aplica imediatamente à página atual.
+- **Provedores disponíveis:** LocalTranslator Studio, Community Lingva, Google Cloud Translation e DeepL.
+- **Diagnósticos e ferramentas:** teste de conexão, nova tentativa para textos restantes, importação/exportação JSON e estatísticas locais de uso.
+- **Interface legível:** temas claro e escuro acompanham a preferência do sistema.
 
-A quantidade de entradas representa vocabulário, não cobertura garantida de frases inéditas. Textos desconhecidos podem permanecer sem tradução quando o fallback estiver desativado. Os dicionários e traduções aprendidas funcionam sem servidor.
+A quantidade de entradas indica o tamanho do vocabulário, não uma garantia de cobertura de frases completas. Com o fallback desativado, textos desconhecidos podem permanecer sem tradução. Os dicionários locais e as traduções já aprendidas funcionam sem um servidor de tradução.
 
 ## Instalação
 
-1. Extraia o ZIP em uma pasta nova para evitar arquivos obsoletos.
+1. Extraia o ZIP da extensão para uma nova pasta.
 2. Abra `chrome://extensions` ou `edge://extensions`.
-3. Ative **Modo do desenvolvedor**, escolha **Carregar sem compactação** e selecione a pasta com `manifest.json`.
-4. Reabra as páginas antigas uma vez após instalar/atualizar a extensão.
+3. Ative o **Modo do desenvolvedor** e selecione **Carregar sem compactação**.
+4. Escolha a pasta que contém `manifest.json`.
+5. Recarregue uma vez as abas de sites já abertas para ativar a extensão.
 
-Depois disso, alterações de configuração e ativação do fallback funcionam imediatamente. Para manter a identidade e os dados de uma instalação sem compactação existente, substitua os arquivos no mesmo diretório usado pelo navegador; remova separadamente arquivos gerados obsoletos desse diretório.
+### Atualizando uma instalação existente
 
-## Tradução local com Studio
+Substitua os arquivos na pasta que o navegador já carrega e clique em **Recarregar** no cartão da extensão. Reabra o painel e confirme que o cabeçalho mostra **6.0.1**. Recarregue uma vez as abas de sites já abertas após uma atualização.
 
-Há links **Get LocalTranslator Studio** no cabeçalho e em um cartão ao lado do endereço do servidor.
+Mantenha a mesma pasta de instalação para preservar a identidade da extensão no navegador e os dicionários armazenados. Remova arquivos obsoletos separadamente ao copiar uma nova versão sobre uma instalação antiga. Depois disso, mudanças nas configurações e a ativação manual do fallback se aplicam sem recarregar a página.
 
-1. Baixe e instale separadamente o [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio).
+## Tradução local e privada com LocalTranslator Studio
+
+Esta versão inclui integração pronta para uso com o **[LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)**. Instale o aplicativo separadamente para usá-lo como servidor local de tradução da extensão.
+
+1. Baixe e configure o LocalTranslator Studio seguindo o README do aplicativo.
 2. Inicie o servidor com `start.bat` no Windows ou `bash start.sh` no Linux.
-3. Selecione **LocalTranslator Studio** na extensão e informe `http://localhost:5000` ou a porta escolhida.
-4. Clique em **Test connection and translation**.
-5. Ative **Hybrid learning fallback** manualmente para traduzir textos sem cobertura local.
+3. Na seção **Translation service** da extensão, selecione **LocalTranslator Studio**.
+4. Defina **Local server address** como `http://localhost:5000`, ou use a porta que você configurou.
+5. Clique em **Test connection and translation**.
+6. Ative **Hybrid learning fallback** manualmente quando quiser traduzir textos não cobertos pelos dicionários.
 
-A extensão não instala, inclui nem inicia o servidor. O Studio não precisa de chave de API. Sua página Models permite gerenciar idiomas; o diagnóstico informa modelos ausentes e erros de tradução.
+Não é necessária uma chave de API. Ao usar um endereço de loopback, como `localhost` ou `127.0.0.1`, a tradução é processada no seu computador. A extensão não aplica um limite diário de fallback ao LocalTranslator Studio em endereços de loopback.
 
-Endereços locais em `localhost`, `127.0.0.1` e `[::1]` não têm limite diário de fallback; o uso continua contabilizado. Serviços externos respeitam o limite configurado. Escolher outro idioma não ativa o fallback automaticamente.
+## Outros provedores e privacidade
 
-Configurações antigas do provedor local são migradas para Studio no primeiro uso. O endereço anterior válido é preservado quando disponível, assim como as traduções aprendidas e a preferência manual de fallback. Inicie o aplicativo Studio separadamente nesse endereço.
-
-## Provedores e privacidade
-
-| Provedor | Configuração | Processamento |
+| Provedor | Configuração | Onde o texto é processado |
 |---|---|---|
-| LocalTranslator Studio | Endereço do servidor | No computador quando o endereço for local |
-| Community Lingva | URL da instância | Serviço externo comunitário |
-| Google Cloud Translation | Chave de API | Serviço externo Google |
-| DeepL | Chave de API | Serviço externo DeepL |
+| LocalTranslator Studio | Endereço do servidor local | No seu computador quando usado um endereço de loopback |
+| Community Lingva | URL da instância | Serviço externo da comunidade |
+| Google Cloud Translation | Chave de API | Serviço externo do Google |
+| DeepL | Chave de API | Serviço externo do DeepL |
 
-Com o fallback desativado, a consulta aos dicionários permanece local. Ao ativá-lo, textos elegíveis são enviados ao provedor selecionado. Chaves, preferências e traduções aprendidas ficam no armazenamento local da extensão. Instâncias públicas podem ficar indisponíveis; diagnósticos não garantem disponibilidade. Consulte [SECURITY.md](SECURITY.md).
+Com o fallback desativado, a consulta aos dicionários permanece local. Ao ativá-lo, os textos elegíveis da página são enviados ao provedor selecionado. Escolher outro idioma não ativa o fallback automaticamente.
+
+Configurações, chaves de API e traduções aprendidas ficam no armazenamento local da extensão. Instâncias públicas podem ficar indisponíveis. Consulte [SECURITY.md](SECURITY.md) para detalhes sobre segurança e privacidade.
 
 ## Dicionários e crawler
 
-Foram preservados os dicionários curados/gerais, pares bilíngues, manifestos de origem e licenças. Traduções curadas têm prioridade; sentidos ambíguos de glossários são excluídos da correspondência automática. Consulte [README-DICTIONARIES.md](README-DICTIONARIES.md) e [tools/readme-ptbr.md](tools/readme-ptbr.md).
+O crawler coleta apenas texto, lê as URLs dos sites em `tools/sites.txt`, ignora frases conhecidas e grava os resultados incrementais dos dicionários durante a execução. Ele coleta textos sem baixar imagens ou outros recursos das páginas.
 
-O crawler coleta textos, lê os sites de `tools/sites.txt`, pula frases conhecidas e grava atualizações incrementais. O servidor padrão é `http://localhost:5000`; informar outro endereço é opcional:
+O servidor de tradução padrão é `http://localhost:5000`, portanto informar o endereço é opcional. Instale os requisitos do crawler conforme seu guia, adicione os sites que deseja analisar em `tools/sites.txt` e execute um comando na pasta principal do projeto.
+
+### Windows CMD
 
 ```bat
 tools\crawl.bat
+```
+
+Para usar outro endereço ou porta:
+
+```bat
 tools\crawl.bat --translate-url http://localhost:5001
 ```
 
+### Linux
+
 ```sh
 bash tools/crawl.sh
+```
+
+Para usar outro endereço ou porta:
+
+```sh
 bash tools/crawl.sh --translate-url http://localhost:5001
 ```
 
-Use `--no-translate` para somente coletar texto. Instale as dependências conforme o guia. Resultados do crawler, caches e arquivos Python compilados são gerados localmente e não acompanham o pacote.
+Adicione `--no-translate` para coletar textos sem solicitar traduções. Resultados do crawler, caches e arquivos Python compilados são gerados localmente e não estão incluídos nesta versão.
 
-## Desenvolvimento e validação
+## Licença e créditos
 
-Os testes principais usam Node.js. Testes de navegador também precisam de Playwright e Chromium:
+O código original da extensão usa a licença [MIT](LICENSE). Os dicionários mantêm suas licenças individuais CC BY-SA, GPL e demais termos específicos de cada fonte.
 
-```sh
-node tests/engine.test.cjs
-node tests/worker.test.cjs
-node tests/routing.test.cjs
-node tests/local-budget.test.cjs
-node tests/provider-migration.test.cjs
-```
+Avisos obrigatórios, cabeçalhos de créditos, manifestos de fontes e arquivos de código-fonte correspondentes, quando aplicáveis, estão incluídos no projeto e em `third_party`. Preserve esses arquivos ao redistribuir pacotes de dicionários. Consulte [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) para créditos e detalhes das fontes.
 
-Veja [docs/VALIDATION.md](docs/VALIDATION.md) para verificações reais e limitações. APIs simuladas não substituem um teste da extensão instalada. Os dicionários não são modelos neurais e não garantem resultados idênticos aos do Google.
-
-O pacote inclui implementação, testes, fontes de dicionários e créditos. Não inclui distribuição de servidor, inicializadores de contêiner, bancos do crawler nem ZIP duplicado de dicionários.
-
-## Licença
-
-Código original: [MIT](LICENSE). Os dicionários mantêm os termos CC BY-SA / GPL e demais licenças indicadas por fonte. Créditos e arquivos de código-fonte correspondentes permanecem em `third_party` e nos manifestos. Preserve esses materiais ao redistribuir.
-
-Aplicativo relacionado: [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio). Autor: [Marcus Silva](https://github.com/marcusbsilva).
-
-### Atualizando para 6.0.1
-
-Extraia o pacote completo na pasta indicada em **Detalhes da extensão → Caminho da extensão**, clique em **Recarregar** em `chrome://extensions` (ou `edge://extensions`) e reabra o painel. O cabeçalho deve mostrar **6.0.1**. O painel carrega `popup-v6.0.1.css` e usa largura fixa de 420 px.
+**Aplicativo relacionado:** [LocalTranslator Studio](https://github.com/marcusbsilva/LocalTranslator-Studio)  
+**Autor:** [Marcus Silva](https://github.com/marcusbsilva)  
+**Repositório da extensão:** [Hybrid Web Translator](https://github.com/marcusbsilva/Hybrid-web-translator)
