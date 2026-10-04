@@ -42,11 +42,7 @@ This version includes a ready-to-go integration with **LocalTranslator Studio** 
 4. Use **Test connection and translation**.
 5. Enable **Hybrid learning fallback** manually when you want uncovered text translated.
 
-The extension does not start, bundle or install the server. No API key is needed for Studio. Its Models page manages installed languages. Diagnostics report missing source/target models and translation errors.
-
-Local endpoints on `localhost`, `127.0.0.1` and `[::1]` bypass the daily fallback budget; usage is still counted. External services retain the configured budget. The fallback never enables itself when you choose another language.
-
-Existing obsolete local-provider settings are mapped to Studio on first use. A previous valid local-server address is preserved when available, along with learned translations and the manual fallback preference. Start the separate Studio application at that address.
+No API key is needed for LocalTranslator Studio.
 
 ## Other providers and privacy
 
